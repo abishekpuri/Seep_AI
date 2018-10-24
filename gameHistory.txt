@@ -1,0 +1,206 @@
+[Center has 2 Piles:
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [7 Of Diamonds, 5 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Hearts]
+Unfixed Pile Value:13, Score:1, Cards: [1 Of Spades, 7 Of Diamonds, 5 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Unfixed Pile Value:13, Score:1, Cards: [1 Of Spades, 7 Of Diamonds, 5 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Unfixed Pile Value:13, Score:1, Cards: [1 Of Spades, 7 Of Diamonds, 5 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Fixed Pile Value:13, Score:1, Cards: [13 Of Hearts, 1 Of Spades, 7 Of Diamonds, 5 Of Hearts]
+, Center has 3 Piles:
+Unfixed Pile Value:11, Score:0, Cards: [11 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Fixed Pile Value:13, Score:1, Cards: [13 Of Hearts, 1 Of Spades, 7 Of Diamonds, 5 Of Hearts]
+, Center has 3 Piles:
+Unfixed Pile Value:11, Score:0, Cards: [11 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Fixed Pile Value:13, Score:1, Cards: [13 Of Hearts, 1 Of Spades, 7 Of Diamonds, 5 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:11, Score:0, Cards: [11 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Unfixed Pile Value:13, Score:0, Cards: [2 Of Diamonds, 11 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Unfixed Pile Value:13, Score:0, Cards: [2 Of Diamonds, 11 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+Unfixed Pile Value:13, Score:0, Cards: [2 Of Diamonds, 11 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+, Center has 3 Piles:
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+Unfixed Pile Value:12, Score:0, Cards: [3 Of Diamonds, 9 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+, Center has 2 Piles:
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:6, Score:0, Cards: [6 Of Diamonds]
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+, Center has 2 Piles:
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+, Center has 2 Piles:
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Diamonds]
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Diamonds]
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Diamonds]
+Unfixed Pile Value:7, Score:0, Cards: [7 Of Clubs]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 2 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Diamonds]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Diamonds]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Diamonds]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 2 Piles:
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Clubs]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Clubs]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 4 Piles:
+Unfixed Pile Value:2, Score:0, Cards: [2 Of Hearts]
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Clubs]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Clubs]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 3 Piles:
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Clubs]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 4 Piles:
+Unfixed Pile Value:2, Score:2, Cards: [2 Of Spades]
+Unfixed Pile Value:9, Score:0, Cards: [9 Of Clubs]
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [3 Of Clubs, 8 Of Diamonds]
+, Center has 1 Piles:
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+, Center has 2 Piles:
+Unfixed Pile Value:10, Score:0, Cards: [10 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Fixed Pile Value:10, Score:6, Cards: [10 Of Diamonds, 10 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Fixed Pile Value:10, Score:6, Cards: [10 Of Diamonds, 10 Of Hearts]
+Unfixed Pile Value:11, Score:0, Cards: [11 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Fixed Pile Value:10, Score:6, Cards: [10 Of Diamonds, 10 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:9, Score:9, Cards: [9 Of Spades]
+Fixed Pile Value:10, Score:6, Cards: [10 Of Diamonds, 10 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:9, Score:9, Cards: [9 Of Spades]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Hearts]
+Unfixed Pile Value:9, Score:9, Cards: [9 Of Spades]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:6, Score:0, Cards: [6 Of Clubs]
+Unfixed Pile Value:8, Score:0, Cards: [8 Of Hearts]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:6, Score:0, Cards: [6 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:6, Score:0, Cards: [6 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:4, Score:0, Cards: [4 Of Hearts]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:4, Score:4, Cards: [4 Of Spades]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:3, Score:0, Cards: [3 Of Hearts]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 2 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:1, Score:1, Cards: [1 Of Clubs]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 4 Piles:
+Unfixed Pile Value:1, Score:1, Cards: [1 Of Clubs]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:10, Score:10, Cards: [10 Of Spades]
+Unfixed Pile Value:12, Score:0, Cards: [12 Of Clubs]
+, Center has 3 Piles:
+Unfixed Pile Value:1, Score:1, Cards: [1 Of Clubs]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:10, Score:10, Cards: [10 Of Spades]
+, Center has 4 Piles:
+Unfixed Pile Value:1, Score:1, Cards: [1 Of Clubs]
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:8, Score:8, Cards: [8 Of Spades]
+Unfixed Pile Value:10, Score:10, Cards: [10 Of Spades]
+, Center has 3 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:8, Score:8, Cards: [8 Of Spades]
+Unfixed Pile Value:10, Score:10, Cards: [10 Of Spades]
+, Center has 4 Piles:
+Unfixed Pile Value:5, Score:0, Cards: [5 Of Clubs]
+Unfixed Pile Value:7, Score:7, Cards: [7 Of Spades]
+Unfixed Pile Value:8, Score:8, Cards: [8 Of Spades]
+Unfixed Pile Value:10, Score:10, Cards: [10 Of Spades]
+]
