@@ -22,8 +22,9 @@ def playGame():
     validBidHand = False
     while not(validBidHand):
         deck = Deck.Deck()
-        computer = Player.Player(0)
+        computer = Ai.Ai(0)
         human = Player.Player(1)
+        computer.addOpponent(human)
         for i in range(4):
             human.addCardsToHand([deck.dealCard()])
             computer.addCardsToHand([deck.dealCard()])

@@ -23,7 +23,7 @@ class Player:
         self.hand = sorted(self.hand,key=operator.attrgetter('value','suit'))
     def calculateScore(self):
         self.score = 50*self.seeps
-        print("CARDS BEING SCORED",self.cards)
+        # print("CARDS BEING SCORED",self.cards)
         for card in self.cards:
             if card.suit == 0:
                 self.score += card.value
@@ -160,15 +160,7 @@ class Player:
         for move in self.moves:
             new_center = copy.deepcopy(center)
             self.doMove(move,new_center,True)
-            if len(new_center.piles) == 0:
-                moves.append((move,50 + sum([p.score for p in move['piles']])))
-            elif len(new_center.piles) == 1 or \
-               (len(list(filter(lambda x: x.fixed,new_center.piles))) == 0 and sum([p.value for p in new_center.piles]) <= 13):
-                moves.append((move,-1))
-            elif move['Type'] == 7:
-                moves.append((move,sum([p.score for p in move['piles']])))
-            else:
-                moves.append((move,0))
+            moves.append((move,self.evaluateMove(move,new_center)))
         moves = sorted(moves,key=lambda x: x[1],reverse=False)
         move = moves.pop()[0]
         print(self.printMove(move))
@@ -176,3 +168,13 @@ class Player:
         self.doMove(move,center)
         #if(move['Type'] == 7):
             #print("After making move, cards are",self.cards)
+    def evaluateMove(self,move,new_center):
+        score = 0
+        if len(new_center.piles) == 0:
+            score = 50 + sum([p.score for p in move['piles']])
+        elif len(new_center.piles) == 1 or \
+            (len(list(filter(lambda x: x.fixed,new_center.piles))) == 0 and sum([p.value for p in new_center.piles]) <= 13):
+            score = -1
+        elif move['Type'] == 7:
+            score = sum([p.score for p in move['piles']])
+        return score
