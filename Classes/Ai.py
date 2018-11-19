@@ -18,9 +18,9 @@ class Ai(Player.Player):
         opponent = copy.deepcopy(self.opponent)
         temp_center = copy.deepcopy(center)
         bestMoves = []
-        depth = 1
+        depth = 2
 
-        def minimax(center, agent, opponent, depth, maxAgent):
+        def minimax(center, agent, opponent, depth, maxAgent, alpha, beta):
             agent.possibleMoves(center)
             opponent.possibleMoves(center)
             if depth == 0 or not agent.moves or not opponent.moves:
@@ -34,11 +34,14 @@ class Ai(Player.Player):
                     new_agent = copy.deepcopy(agent)
                     new_agent.doMove(move,new_center)
 
-                    score = minimax(new_center, new_agent, opponent, depth, False)
+                    score = minimax(new_center, new_agent, opponent, depth, False, alpha, beta)
 
                     if score > final_score:
                         final_score = score
                         final_move = move
+                    if score > beta:
+                        return score
+                    alpha = max(alpha, score)
                 return score
             else:
                 final_score = float('inf')
@@ -48,13 +51,18 @@ class Ai(Player.Player):
                     new_opponent = copy.deepcopy(opponent)
                     new_opponent.doMove(move,new_center)
 
-                    score = minimax(new_center, agent, new_opponent, depth - 1, True)
+                    score = minimax(new_center, agent, new_opponent, depth - 1, True, alpha, beta)
 
                     if score < final_score:
                         final_score = score
                         final_move = move
+                    if score < alpha:
+                        return score
+                    beta = min(beta, score)
                 return score
         
+        alpha=float('-inf')
+        beta=float('inf')
         scores = []
         self.possibleMoves(temp_center)
         for move in self.moves:
@@ -62,8 +70,11 @@ class Ai(Player.Player):
             new_agent = copy.deepcopy(agent)
             new_agent.doMove(move,new_center)
 
-            score = minimax(new_center, new_agent, opponent, depth, False)
+            score = minimax(new_center, new_agent, opponent, depth, False, alpha, beta)
             scores.append((move, score))
+            if score > beta:
+                break
+            alpha = max(alpha, score)
 
         scores = sorted(scores,key=lambda x: x[1],reverse=True)
         for s in scores:
