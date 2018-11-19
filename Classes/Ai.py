@@ -16,7 +16,7 @@ class Ai(Player.Player):
         alpha = float('-inf')
         beta = float('inf')
         agents = [self] + self.opponents
-        depth = 2
+        depth = 1
 
         def alphaBeta(center, depth, agents, agentIndex, alpha, beta, bidMove=False, bid=0):
           agent = agents[agentIndex]
@@ -74,7 +74,8 @@ class Ai(Player.Player):
           if score > beta:
             break
           alpha = max(alpha, score)
-
+        print("Scores For Moves",scores)
+        print(self.moves)
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
         chosenIndex = random.choice(bestIndices) # Pick randomly among the best
