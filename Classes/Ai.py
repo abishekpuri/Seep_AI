@@ -16,9 +16,10 @@ class Ai(Player.Player):
         alpha = float('-inf')
         beta = float('inf')
         agents = [self] + self.opponents
-        depth = 2
+        depth = 1
+        bestMoves = []
 
-        def alphaBeta(center, depth, agents, agentIndex, alpha, beta, bidMove=False, bid=0):
+        def alphaBeta(center, depth, agents, agentIndex, alpha, beta, bestMoves, bidMove=False, bid=0):
           agent = agents[agentIndex]
 
           # Collect legal moves and successor states
@@ -29,16 +30,22 @@ class Ai(Player.Player):
 
           if agentIndex == 0: # maximize the value
             value = float("-inf")
+            bestmove = None
             for move in agent.moves:
             #   print(agent.printMove(move))
               new_center = copy.deepcopy(center)
               new_agent = copy.deepcopy(agent)
               new_agent.doMove(move,new_center)
               agents[agentIndex] = new_agent
-              value = max(value, alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta, bidMove, bid))
-              if value > beta:
-                return value
-              alpha = max(alpha, value)
+              v = alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta, bestMoves)
+              if v > value:
+                value = v
+                bestmove = move
+            #   if value > beta:
+            #     bestMoves.append(bestmove)
+            #     return value
+            #   alpha = max(alpha, value)
+            bestMoves.append(bestmove)
             return value
           else: # minimize the value
             value = float("inf")
@@ -49,12 +56,20 @@ class Ai(Player.Player):
               new_agent.doMove(move,new_center)
               agents[agentIndex] = new_agent
               if agentIndex + 1 == numOfAgents:
-                value = min(value, alphaBeta(new_center, depth - 1, agents, 0, alpha, beta))
+                v = alphaBeta(new_center, depth - 1, agents, 0, alpha, beta, bestMoves)
+                if v < value:
+                    value = v
+                    bestmove = move
               else:
-                value = min(value, alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta))
-              if value < alpha:
-                return value
-              beta = min(beta, value)
+                v = alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta, bestMoves)
+                if v < value:
+                    value = v
+                    bestmove = move
+            #   if value < alpha:
+            #     bestMoves.append(bestmove)
+            #     return value
+            #   beta = min(beta, value)
+            bestMoves.append(bestmove)
             return value
 
         # Collect legal moves and successor states
@@ -63,13 +78,16 @@ class Ai(Player.Player):
         # Choose one of the best actions
         scores = []
         agent = copy.deepcopy(self)
-        for move in self.moves:
-        #   print(self.printMove(move))
+        for i, move in enumerate(self.moves):
+          bestMoves = []
+          print("AI Move is %s " % self.printMove(move))
           new_center = copy.deepcopy(center)
           agent.doMove(move,new_center)
           new_agent = copy.deepcopy(agent)
           agents[0] = new_agent
-          score = alphaBeta(new_center, depth, agents, 1, alpha, beta)
+          score = alphaBeta(new_center, depth, agents, 1, alpha, beta, bestMoves)
+          print("Best moves are %s" % bestMoves)
+          print("Score is %i" % score)
           scores.append(score)
           if score > beta:
             break
