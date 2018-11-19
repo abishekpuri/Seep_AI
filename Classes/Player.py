@@ -23,7 +23,7 @@ class Player:
         self.hand = sorted(self.hand,key=operator.attrgetter('value','suit'))
     def calculateScore(self):
         self.score = 50*self.seeps
-        print("CARDS BEING SCORED",self.cards)
+        # print("CARDS BEING SCORED",self.cards)
         for card in self.cards:
             if card.suit == 0:
                 self.score += card.value
