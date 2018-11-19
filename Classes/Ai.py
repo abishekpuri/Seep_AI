@@ -17,10 +17,7 @@ class Ai(Player.Player):
         beta = float('inf')
         agents = [self] + self.opponents
         depth = 1
-<<<<<<< HEAD
-=======
         bestMoves = []
->>>>>>> d1d6b6123cde60453320ec2d13a7d4dee2486dc9
 
         def alphaBeta(center, depth, agents, agentIndex, alpha, beta, bestMoves, bidMove=False, bid=0):
           agent = agents[agentIndex]
