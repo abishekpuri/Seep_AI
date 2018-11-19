@@ -25,15 +25,15 @@ class Ai(Player.Player):
           agent.possibleMoves(center,bidMove,bid)
 
           if depth == 0 or len(agent.moves) == 0:
-            return agent.calculateScore()
+            return agent.calculateScore() - agents[1].calculateScore()
 
           if agentIndex == 0: # maximize the value
             value = float("-inf")
             for move in agent.moves:
             #   print(agent.printMove(move))
               new_center = copy.deepcopy(center)
-              agent.doMove(move,new_center)
               new_agent = copy.deepcopy(agent)
+              new_agent.doMove(move,new_center)
               agents[agentIndex] = new_agent
               value = max(value, alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta, bidMove, bid))
               if value > beta:
@@ -45,8 +45,8 @@ class Ai(Player.Player):
             for move in agent.moves:
             #   print(agent.printMove(move))
               new_center = copy.deepcopy(center)
-              agent.doMove(move,new_center)
               new_agent = copy.deepcopy(agent)
+              new_agent.doMove(move,new_center)
               agents[agentIndex] = new_agent
               if agentIndex + 1 == numOfAgents:
                 value = min(value, alphaBeta(new_center, depth - 1, agents, 0, alpha, beta))
