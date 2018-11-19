@@ -6,98 +6,68 @@ from . import Player
 
 
 class Ai(Player.Player): 
-    def __init__(self,id_):
+    def __init__(self,id_, opponent=None):
         super().__init__(id_)
-        self.opponents = []
+        self.opponent = opponent
+
     def addOpponent(self,opponent):
-        self.opponents.append(opponent)
+        self.opponent = opponent
+
     def makeMove(self,center,bidMove=False,bid=0):
-        numOfAgents = len(self.opponents)+1
-        alpha = float('-inf')
-        beta = float('inf')
-        agents = [self] + self.opponents
-        depth = 1
-        bestMoves = []
-
-        def alphaBeta(center, depth, agents, agentIndex, alpha, beta, bestMoves, bidMove=False, bid=0):
-          agent = agents[agentIndex]
-
-          # Collect legal moves and successor states
-          agent.possibleMoves(center,bidMove,bid)
-
-          if depth == 0 or len(agent.moves) == 0:
-            return agent.calculateScore() - agents[1].calculateScore()
-
-          if agentIndex == 0: # maximize the value
-            value = float("-inf")
-            bestmove = None
-            for move in agent.moves:
-            #   print(agent.printMove(move))
-              new_center = copy.deepcopy(center)
-              new_agent = copy.deepcopy(agent)
-              new_agent.doMove(move,new_center)
-              agents[agentIndex] = new_agent
-              v = alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta, bestMoves)
-              if v > value:
-                value = v
-                bestmove = move
-            #   if value > beta:
-            #     bestMoves.append(bestmove)
-            #     return value
-            #   alpha = max(alpha, value)
-            bestMoves.append(bestmove)
-            return value
-          else: # minimize the value
-            value = float("inf")
-            for move in agent.moves:
-            #   print(agent.printMove(move))
-              new_center = copy.deepcopy(center)
-              new_agent = copy.deepcopy(agent)
-              new_agent.doMove(move,new_center)
-              agents[agentIndex] = new_agent
-              if agentIndex + 1 == numOfAgents:
-                v = alphaBeta(new_center, depth - 1, agents, 0, alpha, beta, bestMoves)
-                if v < value:
-                    value = v
-                    bestmove = move
-              else:
-                v = alphaBeta(new_center, depth, agents, agentIndex + 1, alpha, beta, bestMoves)
-                if v < value:
-                    value = v
-                    bestmove = move
-            #   if value < alpha:
-            #     bestMoves.append(bestmove)
-            #     return value
-            #   beta = min(beta, value)
-            bestMoves.append(bestmove)
-            return value
-
-        # Collect legal moves and successor states
-        self.possibleMoves(center,bidMove,bid)
-
-        # Choose one of the best actions
-        scores = []
         agent = copy.deepcopy(self)
-        for i, move in enumerate(self.moves):
-          bestMoves = []
-          print("AI Move is %s " % self.printMove(move))
-          new_center = copy.deepcopy(center)
-          new_agent = copy.deepcopy(agent)
-          new_agent.doMove(move,new_center)
-          agents[0] = new_agent
-          score = alphaBeta(new_center, depth, agents, 1, alpha, beta, bestMoves)
-          print("Best moves are %s" % bestMoves)
-          print("Score is %i" % score)
-          scores.append(score)
-        #   if score > beta:
-        #     break
-        #   alpha = max(alpha, score)
+        opponent = copy.deepcopy(self.opponent)
+        temp_center = copy.deepcopy(center)
+        bestMoves = []
+        depth = 1
 
-        bestScore = max(scores)
-        bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+        def minimax(center, agent, opponent, depth, maxAgent):
+            agent.possibleMoves(center)
+            opponent.possibleMoves(center)
+            if depth == 0 or not agent.moves or not opponent.moves:
+                return agent.calculateScore() - opponent.calculateScore()
 
-        move = self.moves[chosenIndex]
-        print(self.printMove(move))
-        self.hand.pop(self.hand.index(move['card']))
-        self.doMove(move,center)
+            if maxAgent:
+                final_score = float('-inf')
+                final_move = None
+                for move in agent.moves:
+                    new_center = copy.deepcopy(center)
+                    new_agent = copy.deepcopy(agent)
+                    new_agent.doMove(move,new_center)
+
+                    score = minimax(new_center, new_agent, opponent, depth, False)
+
+                    if score > final_score:
+                        final_score = score
+                        final_move = move
+                return score
+            else:
+                final_score = float('inf')
+                final_move = None
+                for move in opponent.moves:
+                    new_center = copy.deepcopy(center)
+                    new_opponent = copy.deepcopy(opponent)
+                    new_opponent.doMove(move,new_center)
+
+                    score = minimax(new_center, agent, new_opponent, depth - 1, True)
+
+                    if score < final_score:
+                        final_score = score
+                        final_move = move
+                return score
+        
+        scores = []
+        self.possibleMoves(temp_center)
+        for move in self.moves:
+            new_center = copy.deepcopy(temp_center)
+            new_agent = copy.deepcopy(agent)
+            new_agent.doMove(move,new_center)
+
+            score = minimax(new_center, new_agent, opponent, depth, False)
+            scores.append((move, score))
+
+        scores = sorted(scores,key=lambda x: x[1],reverse=True)
+        for s in scores:
+            print("AI have move %s with score %i" % (self.printMove(s[0]), s[1]))
+
+        print(self.printMove(scores[0][0]))
+        self.doMove(scores[0][0], center)

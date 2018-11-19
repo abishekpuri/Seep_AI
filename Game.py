@@ -14,10 +14,8 @@ def playGame():
     gameHistory = []
     center = Center.Center()
     deck = Deck.Deck()
-    computer = Ai.Ai(0)
+    computer = Player.Player(0)
     human = Player.Player(1)
-
-    computer.addOpponent(human)
 
     validBidHand = False
     while not(validBidHand):
