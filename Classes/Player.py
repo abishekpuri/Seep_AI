@@ -9,6 +9,7 @@ class Player:
         self.hand = []
         self.cards = []
         self.cardHistory = [[0 for i in range(13)] for j in range(4)]
+        self.knownOpponentCards = []
         self.id = id_
         self.seeps = 0
         self.score = 0
@@ -16,11 +17,17 @@ class Player:
         return "Players Score is " + str(self.score) + " and his hand is " + str(self.hand)
     def __repr__(self):
         return str(self)
+    def seeStartingConfiguration(self,center):
+        # For each pile in the center, we add that card to our cardhistory
+        pass
     def addCardsToHand(self,cards):
         for card in cards:
             self.cardHistory[card.suit][card.value - 1] = 1
         self.hand += cards
         self.hand = sorted(self.hand,key=operator.attrgetter('value','suit'))
+    def evaluateOpponentMove(self,move):
+        # We add the card  played to our card history, and then depending on the move we update our known Opponent Cards
+        pass
     def calculateScore(self):
         self.score = 50*self.seeps
         # print("CARDS BEING SCORED",self.cards)
