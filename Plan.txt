@@ -1,0 +1,18 @@
+1) Remember the number of each card value that have gone, remember how many spades have gone
+numCardsGone = [13 element] # [2,3...] means 2 aces gone, 3 twos gone
+numSpadesGone = [13 element] # [1,1...] means 1 ace spades, 1 two spades
+
+
+2) create a function that takes in self, move and evaluates its knowledge based on the move
+e.g. 
+If the move involved making a new pile, you know opponent must have atleast one of that number
+If the move involved picking up a pile, you remove the "knowledge" that opponent has that number
+Every move involves one new card being shown, update card history 
+
+cardsGone = []
+
+3) The minmax should do the following:
+
+max X : Pr(Opponent has X) * Value of opponent playing X
+
+This will drastically increase search space but should have better results. 
