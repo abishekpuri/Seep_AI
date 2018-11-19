@@ -82,16 +82,16 @@ class Ai(Player.Player):
           bestMoves = []
           print("AI Move is %s " % self.printMove(move))
           new_center = copy.deepcopy(center)
-          agent.doMove(move,new_center)
           new_agent = copy.deepcopy(agent)
+          new_agent.doMove(move,new_center)
           agents[0] = new_agent
           score = alphaBeta(new_center, depth, agents, 1, alpha, beta, bestMoves)
           print("Best moves are %s" % bestMoves)
           print("Score is %i" % score)
           scores.append(score)
-          if score > beta:
-            break
-          alpha = max(alpha, score)
+        #   if score > beta:
+        #     break
+        #   alpha = max(alpha, score)
 
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
