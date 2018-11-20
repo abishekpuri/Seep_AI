@@ -19,7 +19,9 @@ class Player:
         return str(self)
     def seeStartingConfiguration(self,center):
         # For each pile in the center, we add that card to our cardhistory
-        pass
+        for pile in center.piles:
+            for card in pile.cards:
+                self.cardHistory[card.suit][card.value - 1] = 1
     def addCardsToHand(self,cards):
         for card in cards:
             self.cardHistory[card.suit][card.value - 1] = 1
@@ -27,7 +29,7 @@ class Player:
         self.hand = sorted(self.hand,key=operator.attrgetter('value','suit'))
     def evaluateOpponentMove(self,move):
         # We add the card  played to our card history, and then depending on the move we update our known Opponent Cards
-        pass
+        self.cardHistory[move['card'].suit][move['card'].value - 1] = 1
     def calculateScore(self):
         self.score = 50*self.seeps
         # print("CARDS BEING SCORED",self.cards)
@@ -143,6 +145,7 @@ class Player:
         move = self.moves[int(input("Please Choose a move from above:\n"))]
         self.hand.pop(self.hand.index(move['card']))
         self.doMove(move,center)
+        return move
     def doMove(self,move,center,test=False):
         if move['Type'] == 1:
             center.addNewPile(Pile.Pile(move['card'].value,[move['card']]))

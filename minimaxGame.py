@@ -42,7 +42,8 @@ def playGame():
         center.addNewPile(Pile.Pile(card.value,[card]),True)
 
     print(center)
-    human.HumanChooseMove(center,True,bidValue)
+    move = human.HumanChooseMove(center,True,bidValue)
+    computer.evaluateOpponentMove(move)
     #human.makeMove(center,True,bidValue)
     os.system('clear')
     for i in range(8):
@@ -50,17 +51,22 @@ def playGame():
         computer.addCardsToHand([deck.dealCard()])
     #print("COMPUTERS HAND")
     print("Computer Hand",computer.hand)
-    computer.makeMove(center)
+    move = computer.makeMove(center)
+    human.evaluateOpponentMove(move)
 
     while len(computer.hand) > 0:
         # print("HUMANS MOVE IS:")
         # human.makeMove(center)
         print(center)
         print(human.hand)
-        human.HumanChooseMove(center)
+        move = human.HumanChooseMove(center,False)
+        computer.evaluateOpponentMove(move)
         os.system('clear')
         print("COMPUTERS MOVE IS:")
-        computer.makeMove(center)
+        move = computer.makeMove(center)
+        human.evaluateOpponentMove(move)
+        print("End of Round, players card history is",human.cardHistory)
+        a = int(input("Type anything to continue"))
 
     print("HALF WAY SCORES")
     print("Human Score",human.calculateScore())
@@ -75,10 +81,14 @@ def playGame():
         # human.makeMove(center)
         print(center)
         print(human.hand)
-        human.HumanChooseMove(center)
+        move = human.HumanChooseMove(center,False)
+        computer.evaluateOpponentMove(move)
         os.system('clear')
         print("COMPUTERS MOVE IS:")
-        computer.makeMove(center)
+        move = computer.makeMove(center)
+        human.evaluateOpponentMove(move)
+        print("End of Round, players card history is",human.cardHistory)
+        a = int(input("Type anything to continue"))
 
     
     # print("FINAL CENTER")

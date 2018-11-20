@@ -37,28 +37,33 @@ def playGame():
     for i in range(4):
         card = deck.dealCard()
         center.addNewPile(Pile.Pile(card.value,[card]),True)
+    human.seeStartingConfiguration(center)
+    computer.seeStartingConfiguration(center)
 
     print(center)
-    human.HumanChooseMove(center,True,bidValue)
-    #human.makeMove(center,True,bidValue)
+    move = human.HumanChooseMove(center,True,bidValue)
+    computer.evaluateOpponentMove(move)
     os.system('clear')
     for i in range(8):
         human.addCardsToHand([deck.dealCard()])
         computer.addCardsToHand([deck.dealCard()])
-    #print("COMPUTERS HAND")
-    print("Computer Hand",computer.hand)
-    computer.makeMove(center)
-
+    # print("COMPUTERS HAND")
+    # print("Computer Hand",computer.hand)
+    move = computer.makeMove(center)
+    human.evaluateOpponentMove(move)
     while len(computer.hand) > 0:
         # print("HUMANS MOVE IS:")
         # human.makeMove(center)
         print(center)
         print(human.hand)
-        human.HumanChooseMove(center)
+        move = human.HumanChooseMove(center,False)
+        computer.evaluateOpponentMove(move)
         os.system('clear')
         print("COMPUTERS MOVE IS:")
-        computer.makeMove(center)
-
+        move = computer.makeMove(center)
+        human.evaluateOpponentMove(move)
+        print("End of Round, players card history is",human.cardHistory)
+        a = int(input("Type anything to continue"))
     print("HALF WAY SCORES")
     print("Human Score",human.calculateScore())
     print("Computer Score",computer.calculateScore())
@@ -72,10 +77,12 @@ def playGame():
         # human.makeMove(center)
         print(center)
         print(human.hand)
-        human.HumanChooseMove(center)
+        move = human.HumanChooseMove(center,False)
+        computer.evaluateOpponentMove(move)
         os.system('clear')
         print("COMPUTERS MOVE IS:")
-        computer.makeMove(center)
+        move = computer.makeMove(center)
+        human.evaluateOpponentMove(move)
 
     
     # print("FINAL CENTER")
@@ -90,8 +97,7 @@ def playGame():
     print("Computer Score",computer.calculateScore())
     return gameHistory
 
-playGame()
 if __name__ == "__main__":  
     start_time = time.time()
-    history = playGame()
+    playGame()
     print("--- %s seconds ---" % (time.time() - start_time))
