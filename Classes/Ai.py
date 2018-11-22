@@ -5,10 +5,14 @@ from . import Pile
 from . import Player
 from . import Card
 
-def evaluateState(state, agent):
-    score = agent.calculateScore() - state[1]
-    # if len(center.piles) == 1 or (len(list(filter(lambda x: x.fixed,center.piles))) == 0 and sum([p.value for p in center.piles]) <= 13):
-    #     score -= 50 # prediction of leaving only 1 pile in the center
+def evaluateState(state, agent, myTurn):
+    center, opponentScore = state
+    score = agent.calculateScore() - opponentScore
+    # if state[1] > 0:
+    #     print(state[1])
+    if len(center.piles) == 1 or (len(list(filter(lambda x: x.fixed,center.piles))) == 0 and sum([p.value for p in center.piles]) <= 13):
+        if myTurn:
+            score += 50 # prediction of leaving only 1 pile in the center
     return score, 0
 
 def convertArrayToCards(array):
@@ -101,14 +105,14 @@ def possibleMovesOfCards(center,cardsArray,bidMove=False,bid=0):
     moves = sorted(moves,key=lambda x: x['Type'])
     return moves
 
-def minimax(state, agent, depth, maxAgent, alpha, beta):
+def expertimax(state, agent, depth, maxAgent):
     center, opponentScore = state
     agent.possibleMoves(center)
     opponentMoves = possibleMovesOfCards(center, agent.cardHistory)
     # print(opponentMoves)
     pass
     if depth == 0 or not agent.moves:
-        return evaluateState(state, agent)
+        return evaluateState(state, agent, True)
 
     if maxAgent:
         final_score = float('-inf')
@@ -118,31 +122,24 @@ def minimax(state, agent, depth, maxAgent, alpha, beta):
             new_agent = copy.deepcopy(agent)
             new_agent.doMove(move,new_center)
             new_state = (new_center, opponentScore)
-            score,_ = minimax(new_state, new_agent, depth, False, alpha, beta)
+            score,_ = expertimax(new_state, new_agent, depth, False)
             if score > final_score:
                 final_score = score
                 final_move = move
-            if score > beta:
-                return score,final_move
-            alpha = max(alpha, score)
-        return score,final_move
+        return final_score,final_move
     else:
-        final_score = float('inf')
+        final_score = 0
         final_move = None
+        prob = float(1)/len(opponentMoves)
         for move in opponentMoves:
             new_center = copy.deepcopy(center)
             oppoCards, oppoSeep = doMove(move,new_center,1) # Hardcode id to 1, means human
             new_state = (new_center, opponentScore+calculateScore(oppoCards, oppoSeep)) # Update score as well
-            score,_ = minimax(new_state, agent, depth - 1, True, alpha, beta)
-            
-            if score < final_score:
-                final_score = score
-                final_move = move
-            if score < alpha:
-                return score, final_move
-            beta = min(beta, score)
+            score,_ = expertimax(new_state, agent, depth - 1, True)
+            # Expected value
+            final_score += prob*score
         #print("Final Move is",final_move)
-        return score, final_move
+        return final_score, final_move
 
 class Ai(Player.Player): 
     def __init__(self,id_, opponent=None):
@@ -159,29 +156,24 @@ class Ai(Player.Player):
         #print("Current Agent Score Is",agent.calculateScore())
         opponentScore = self.opponent.calculateScore()
         
-        alpha=float('-inf')
-        beta=float('inf')
         scores = []
         self.possibleMoves(temp_center)
         for move in self.moves:
             new_center = copy.deepcopy(temp_center)
             new_agent = copy.deepcopy(agent)
             new_agent.doMove(move,new_center)
-            #print("move is",move)
+            # print("move is",self.printMove(move))
 
             state = (new_center, opponentScore)
-            score,_ = minimax(state, new_agent, depth, False, alpha, beta)
-            #print("Final Agent Score is",new_agent.calculateScore(),"Final Opponent Score is",-(score - new_agent.calculateScore()))
+            score,_ = expertimax(state, new_agent, depth, False)
+            # print("Final Agent Score is",new_agent.calculateScore(),"Final Opponent Score is",-(score - new_agent.calculateScore()))
             scores.append((move, score,_))
-            if score > beta:
-                break
-            alpha = max(alpha, score)
 
         scores = sorted(scores,key=lambda x: x[1],reverse=True)
         # for s in scores:
         #     #print("AI have move %s with score %i" % (self.#printMove(s[0]), s[1]))
         print(self.printMove(scores[0][0]))
-        print("Opponents Best Move",self.printMove(scores[0][2]))
+        # print("Opponents Best Move",self.printMove(scores[0][2]))
         #print(self.printMove(scores[0][0]))
         self.doMove(scores[0][0], center)
         return scores[0][0]
