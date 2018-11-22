@@ -50,6 +50,7 @@ def playGame():
         human.addCardsToHand([deck.dealCard()])
         computer.addCardsToHand([deck.dealCard()])
     #print("COMPUTERS HAND")
+    print(center)
     print("Computer Hand",computer.hand)
     move = computer.makeMove(center)
     human.evaluateOpponentMove(move)
