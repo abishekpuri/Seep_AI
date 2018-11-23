@@ -53,25 +53,32 @@ class Player:
             del self.hand[key]
             print("Played Card",card_)
     def printMove(self,move):
+        # Throw
         if move['Type'] == 1:
             return "Throw " + str(move['card']) + " To Center"
+        # Create new house
         elif move['Type'] == 2:
             totalValue = sum([p.value for p in move['piles']]) + move['card'].value
             pileValues = [str(p.value) for p in move['piles']]
             return "Combine " + str(move['card']) + " With Piles " + " , ".join(pileValues) + " To Make " + str(totalValue)
+        # Put on top of existing uncemented house
         elif move['Type'] == 3:
             pileValues = [str(p.value) for p in move['piles']]
             return "Put "+str(move['card'])+" On Top Of Piles "+" , ".join(pileValues)
+        # Combine cards to make a house + merge with uncemented houses => new fixed(cemented) pile
         elif move['Type'] == 4:
             totalValue = sum([p.value for p in move['piles']]) + move['card'].value
             pileValues = [str(p.value) for p in move['piles']]
             return "Use "+str(move['card'])+" To Merge Piles "+" , ".join(pileValues)+" With an Unfixed Pile of value "+str(totalValue)+" Making a New Fixed Pile"
+        # Combine cards to make a house + merge with cemented houses
         elif move['Type'] == 5:
             totalValue = sum([p.value for p in move['piles']]) + move['card'].value
             pileValues = [str(p.value) for p in move['piles']]
             return "Use "+str(move['card'])+" To Add Piles "+" , ".join(pileValues)+" To a Fixed Pile of value "+str(totalValue)
+        # Put on top of existing cemented house
         elif move['Type'] == 6:
             return "Put "+str(move['card'])+" On Top Of Fixed Pile "+str(move['pile'][0].value)
+        # Pick up
         elif move['Type'] == 7:
             pileValues = [str(p.value) for p in move['piles']]
             return "Use "+str(move['card'])+" To Pick Up Piles "+" , ".join(pileValues)
