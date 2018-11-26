@@ -50,7 +50,7 @@ def test():
     sarray = np.stack((_score, _score), axis=0)
     harray = np.stack((_hand, _hand), axis=0)
     carray = np.stack((_center, _center), axis=0)
-    out = np.array([1, 1])
+    out = np.array([0, 1])
 
     # build & train
     nn.buildNetwork()

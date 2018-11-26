@@ -142,7 +142,7 @@ class NeuralNetwork:
             print("convBlock1: {}".format(flat.shape))
             dense1 = layers.Dense(units=512, input_shape=(512,), activation='relu')(flat)
             print("dense1: {}".format(dense1.shape))
-            out = layers.Dense(units=1, activation='tanh')(dense1)
+            out = layers.Dense(units=1, activation='sigmoid')(dense1)
             print("out: {}".format(out.shape))
             return out
 
