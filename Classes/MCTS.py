@@ -3,13 +3,14 @@ import copy
 import time
 import math
 class MCTS():
-    def __init__(self,Center,Player1,Player2):
+    def __init__(self,Center,Player1,Player2,firstRound):
         self.center = Center
         self.player = Player1
         self.opponent = Player2 
         self.wins = {}
         self.plays = {}
         self.best_move = -1
+        self.firstRound = firstRound
     def next_state(self,Center,Player1,move):
         center = copy.deepcopy(Center)
         p1 = copy.deepcopy(Player1)
@@ -45,7 +46,8 @@ class MCTS():
                 break
             p2move = choice(p2.moves)
             p2.doMove(p2move,center)
-        center.finalCleanUp(p1 if center.lastPickUp == p1.id else p2)
+        if not self.firstRound:  
+            center.finalCleanUp(p1 if center.lastPickUp == p1.id else p2)
         win = 1 if p1.calculateScore() > p2.calculateScore() else 0
         for p1,center in visited_states:
             if ((str(p1),str(center))) in plays:

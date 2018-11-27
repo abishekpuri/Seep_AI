@@ -50,7 +50,7 @@ def playGame():
         computer.addCardsToHand([deck.dealCard()])
     # print("COMPUTERS HAND")
     # print("Computer Hand",computer.hand)
-    move = MCTS.MCTS(center,computer,human).run_simulation()
+    move = MCTS.MCTS(center,computer,human,True).run_simulation()
     computer.doMove(move,center)
     human.evaluateOpponentMove(move)
     while len(computer.hand) > 0:
@@ -62,7 +62,7 @@ def playGame():
         computer.evaluateOpponentMove(move)
         # os.system('clear')
         #move = computer.makeMove(center)
-        move = MCTS.MCTS(center,computer,human).run_simulation()
+        move = MCTS.MCTS(center,computer,human,True).run_simulation()
         computer.doMove(move,center)
         human.evaluateOpponentMove(move)
     print("HALF WAY SCORES")
@@ -82,7 +82,7 @@ def playGame():
         computer.evaluateOpponentMove(move)
         # os.system('clear')
         #move = computer.makeMove(center)
-        move = MCTS.MCTS(center,computer,human).run_simulation()
+        move = MCTS.MCTS(center,computer,human,False).run_simulation()
         computer.doMove(move,center)
         human.evaluateOpponentMove(move)
 
