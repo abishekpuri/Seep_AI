@@ -24,6 +24,8 @@ class MCTS():
         expand = True
         while len(p1.hand) > 0 or len(p1.hand) > 0:
             p1.possibleMoves(center)
+            if len(p1.moves) == 0:
+                break
             next_states = {str(move):self.next_state(center,p1,move) for move in p1.moves}
             if all(plays.get(next_states[str(move)]) for move in p1.moves):
                 log_total = sum(plays[next_states[str(move)]] for move in p1.moves)
@@ -39,6 +41,8 @@ class MCTS():
                 wins[(str(p1),str(center))] = 0
             visited_states.add((str(p1),str(center)))
             p2.possibleMoves(center)
+            if len(p2.moves) == 0:
+                break
             p2move = choice(p2.moves)
             p2.doMove(p2move,center)
         center.finalCleanUp(p1 if center.lastPickUp == p1.id else p2)
@@ -51,7 +55,7 @@ class MCTS():
     def run_simulation(self):
         games = 0
         currTime = time.time()
-        while time.time() - currTime < 5:
+        while time.time() - currTime < 10:
             self.run_game()
             games += 1
         print("Total Games",games)
@@ -66,3 +70,4 @@ class MCTS():
                 curr_max = self.wins[(str(new_player),str(new_center))]/self.plays[(str(new_player),str(new_center))]
                 curr_move = move
         print("Move",curr_move,"Is the best option, with win rate",curr_max)
+        return curr_move
