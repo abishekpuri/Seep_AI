@@ -2,7 +2,7 @@
 import os
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import models, layers, initializers, regularizers, optimizers, backend
+from tensorflow.python.keras import models, layers, initializers, regularizers, optimizers, backend
 
 # constants
 BATCH_SIZE = 128
@@ -18,7 +18,7 @@ KERNEL_REGULIZER = regularizers.l2()
 class NeuralNetwork:
     def __init__(self):
         self.model = None
-        self.loadCheckpoint()    # loads saved model every time
+        #self.loadCheckpoint()    # loads saved model every time
 
     '''
     ### MAIN FUNCTIONS ###

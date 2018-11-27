@@ -8,11 +8,15 @@ class Player:
     def __init__(self,id_):
         self.hand = []
         self.cards = []
-        self.cardHistory = [[0 for i in range(13)] for j in range(4)]
+        self.cardHistory = [[0 for i in range(14)] for j in range(4)]
         self.knownOpponentCards = []
         self.id = id_
         self.seeps = 0
         self.score = 0
+    def __eq__(self,other):
+        if self.hand == other.hand and self.score == other.score:
+            return True
+        return False
     def __str__(self):
         return "Players Score is " + str(self.score) + " and his hand is " + str(self.hand)
     def __repr__(self):
@@ -150,10 +154,11 @@ class Player:
             move = self.printMove(move)
             print(key,")",move,"Value:",fitness)
         move = self.moves[int(input("Please Choose a move from above:\n"))]
-        self.hand.pop(self.hand.index(move['card']))
         self.doMove(move,center)
         return move
     def doMove(self,move,center,test=False):
+        if not(test):
+            self.hand.pop(self.hand.index(move['card']))
         if move['Type'] == 1:
             center.addNewPile(Pile.Pile(move['card'].value,[move['card']]))
         elif move['Type'] <= 5:
@@ -180,9 +185,9 @@ class Player:
             moves.append((move,self.evaluateMove(move,new_center)))
         moves = sorted(moves,key=lambda x: x[1],reverse=False)
         move = moves.pop()[0]
-        print(self.printMove(move))
-        self.hand.pop(self.hand.index(move['card']))
+        print("Computers Move",self.printMove(move))
         self.doMove(move,center)
+        return move
         #if(move['Type'] == 7):
             #print("After making move, cards are",self.cards)
     def evaluateMove(self,move,new_center):

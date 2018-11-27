@@ -32,6 +32,8 @@ class Center:
         for pile in self.piles:
             str_+= str(pile) + '\n'
         return str_
+    def __eq__(self,other):
+        return self.piles == other.piles
     def __repr__(self):
         return str(self)
     def pickUpPiles(self,card,piles,id_):

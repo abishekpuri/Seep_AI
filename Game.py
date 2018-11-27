@@ -2,6 +2,7 @@ from Classes import Card, Pile, Deck, Player, Center, Ai
 import os
 import copy
 import time
+from random import choice
 # # Encode the game state from the perspective of a player
 # def encodeHistory(player,center):
 #     # There is a 52-D vector, 0 if that card is not in hand, 1 if that card is in hand
@@ -10,6 +11,49 @@ import time
 #         cards[13*card.suit + card.value - 1] = 1
 #     # There is a 13-D vector representing the spades, 0 if that card has not been seen, 1 
 
+def run_game(Center, Player1, Player2,move,debug=False):
+    if debug:
+        print(Center)
+    center = copy.deepcopy(Center)
+    p1 = copy.deepcopy(Player1)
+    p2 = copy.deepcopy(Player2)
+    p1.doMove(move,center)
+    if debug:
+        print("Player 1 Does",p1.printMove(move))
+    while len(p1.hand) > 0 or len(p1.hand) > 0:
+        p2.possibleMoves(center)
+        p2move = choice(p2.moves)
+        if debug:
+            print("Player 2 Does",p2.printMove(p2move))
+        p2.doMove(p2move,center)
+        p1.possibleMoves(center)
+        p1move = choice(p1.moves)
+        if debug:
+            print("Player 1 Does",p2.printMove(p1move))
+        p1.doMove(p1move,center)
+    if debug:
+        print("p1 Score",p1.calculateScore(),"p2 score",p2.calculateScore())
+    if p1.calculateScore() > p2.calculateScore():
+        return 1
+    else:
+        return 0
+
+def get_opt_Move(Center,Player1,Player2):
+    Player1.possibleMoves(Center)
+    maxTime = 5/len(Player1.moves)
+    scores = {}
+    for move in Player1.moves:
+        score = 0
+        count = 0
+        currTime = time.time()
+        while time.time() - currTime < maxTime:
+            count += 1
+            score += run_game(Center,Player1,Player2,move)
+        scores[Player1.printMove(move)] = (move,float(score/count))
+    move = scores[max(scores.keys(), key=(lambda k: scores[k][1]))][0]
+    print("Opt Move",Player1.printMove(move))
+    Player1.doMove(move,Center)
+    return move
 def playGame():
     gameHistory = []
     center = Center.Center()
@@ -43,7 +87,7 @@ def playGame():
     print(center)
     move = human.HumanChooseMove(center,True,bidValue)
     computer.evaluateOpponentMove(move)
-    os.system('clear')
+    # os.system('clear')
     for i in range(8):
         human.addCardsToHand([deck.dealCard()])
         computer.addCardsToHand([deck.dealCard()])
@@ -58,12 +102,10 @@ def playGame():
         print(human.hand)
         move = human.HumanChooseMove(center,False)
         computer.evaluateOpponentMove(move)
-        os.system('clear')
-        print("COMPUTERS MOVE IS:")
-        move = computer.makeMove(center)
+        # os.system('clear')
+        #move = computer.makeMove(center)
+        move = get_opt_Move(center,computer,human)
         human.evaluateOpponentMove(move)
-        print("End of Round, players card history is",human.cardHistory)
-        a = int(input("Type anything to continue"))
     print("HALF WAY SCORES")
     print("Human Score",human.calculateScore())
     print("Computer Score",computer.calculateScore())
@@ -79,9 +121,9 @@ def playGame():
         print(human.hand)
         move = human.HumanChooseMove(center,False)
         computer.evaluateOpponentMove(move)
-        os.system('clear')
-        print("COMPUTERS MOVE IS:")
-        move = computer.makeMove(center)
+        # os.system('clear')
+        #move = computer.makeMove(center)
+        move = get_opt_Move(center,computer,human)
         human.evaluateOpponentMove(move)
 
     

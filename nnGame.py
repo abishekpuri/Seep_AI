@@ -1,17 +1,19 @@
-from Classes import NeuralNetwork, Player, Center, Card, Pile
+from Classes import NeuralNetwork, Player, Center, Card, Pile,MCTS
 import numpy as np
 
 def testInput():
-    player = Player.Player(0)
-    player.hand = [Card.Card(0, 2), Card.Card(1, 4), Card.Card(1, 7), Card.Card(0, 13)]
-    player.cards = [Card.Card(3, 1), Card.Card(3, 4), Card.Card(0, 7), Card.Card(2, 13)]
-    center = Center.Center()
-    pile1 = Pile.Pile(12, [Card.Card(0, 3), Card.Card(1, 12), Card.Card(3, 9)])
-    pile2 = Pile.Pile(11, [Card.Card(2, 11), Card.Card(0, 4), Card.Card(0, 7)])
-    pile3 = Pile.Pile(9, [Card.Card(0, 1), Card.Card(1, 2), Card.Card(0, 6), Card.Card(2, 9)])
-    center.piles = [pile1, pile2, pile3]
-    nn = NeuralNetwork.NeuralNetwork()
-    scoreV, handV, centerV = nn.stateToInput(player, center)
+player = Player.Player(0)
+player.hand = [Card.Card(0, 2), Card.Card(1, 4), Card.Card(1, 7), Card.Card(0, 13)]
+player.cards = [Card.Card(3, 1), Card.Card(3, 4), Card.Card(0, 7), Card.Card(2, 13)]
+center = Center.Center()
+pile1 = Pile.Pile(12, [Card.Card(0, 3), Card.Card(1, 12), Card.Card(3, 9)])
+pile2 = Pile.Pile(11, [Card.Card(2, 11), Card.Card(0, 4), Card.Card(0, 7)])
+pile3 = Pile.Pile(9, [Card.Card(0, 1), Card.Card(1, 2), Card.Card(0, 6), Card.Card(2, 9)])
+center.piles = [pile1, pile2, pile3]
+nn = NeuralNetwork.NeuralNetwork()
+scoreV, handV, centerV = nn.stateToInput(player, center)
+player2 = Player.Player(1)
+player2.hand = [Card.Card(0, 5), Card.Card(0, 7), Card.Card(3, 12), Card.Card(3,1)]
 
     print(player)
     print(center)
