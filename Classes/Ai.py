@@ -10,9 +10,16 @@ def evaluateState(state, agent, myTurn):
     score = agent.calculateScore() - opponentScore
     # if state[1] > 0:
     #     print(state[1])
-    if len(center.piles) == 1 or (len(list(filter(lambda x: x.fixed,center.piles))) == 0 and sum([p.value for p in center.piles]) <= 13):
+    # if len(center.piles) == 1 or (len(list(filter(lambda x: x.fixed,center.piles))) == 0 and sum([p.value for p in center.piles]) <= 13):
+    #     if myTurn:
+    #         for move in center.getMoves(agent.hand): # see if we can get a seep
+    #             if move:
+    #                 score += 50 # prediction of leaving only 1 pile in the center and seep
+    #                 break
+    score -= sum([p.score for p in center.piles]) # don't leave scores in the center because opponent may take it
+    if len(center.piles) == 0:
         if myTurn:
-            score += 50 # prediction of leaving only 1 pile in the center
+            score -= 50 * 2 # prediction of leaving no pile in the center, which means opponent got a seep
     return score, 0
 
 def convertArrayToCards(array):
@@ -162,11 +169,11 @@ class Ai(Player.Player):
             new_center = copy.deepcopy(temp_center)
             new_agent = copy.deepcopy(agent)
             new_agent.doMove(move,new_center)
-            # print("move is",self.printMove(move))
+            print("move is",self.printMove(move))
 
             state = (new_center, opponentScore)
             score,_ = expertimax(state, new_agent, depth, False)
-            # print("Final Agent Score is",new_agent.calculateScore(),"Final Opponent Score is",-(score - new_agent.calculateScore()))
+            print("Final Agent Score is",score)
             scores.append((move, score,_))
 
         scores = sorted(scores,key=lambda x: x[1],reverse=True)
@@ -175,5 +182,6 @@ class Ai(Player.Player):
         print(self.printMove(scores[0][0]))
         # print("Opponents Best Move",self.printMove(scores[0][2]))
         #print(self.printMove(scores[0][0]))
+        self.hand.pop(self.hand.index(scores[0][0]['card']))
         self.doMove(scores[0][0], center)
         return scores[0][0]
