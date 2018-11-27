@@ -17,8 +17,7 @@ KERNEL_REGULIZER = regularizers.l2()
 
 class NeuralNetwork:
     def __init__(self):
-        self.model = None
-        #self.loadCheckpoint()    # loads saved model every time
+        self.loadCheckpoint()    # loads saved model if there is any.
 
     '''
     ### MAIN FUNCTIONS ###
@@ -27,7 +26,7 @@ class NeuralNetwork:
         # Convolutional layer for 3 inputs (score, hand, center)
         scoreInput = layers.Input(shape=(2, 17))
         handInput = layers.Input(shape=(29, ))
-        centerInput = layers.Input(shape=(6, 17))
+        centerInput = layers.Input(shape=(13, 17))
 
         def commonLayer(_input):
             return layers.Activation("relu")(layers.BatchNormalization(axis=CHANNEL_AXIS)(_input))
@@ -73,7 +72,7 @@ class NeuralNetwork:
         # TODO: how to reduce redundacy for piles > 5
         def centerConvLayer(center):
             print("Structure of center conv layer")
-            reshaped = layers.Reshape((6, 17, 1))(center)
+            reshaped = layers.Reshape((13, 17, 1))(center)
             convBlock1 = convBlock2D(reshaped)
             convBlock2 = convBlock2D(convBlock1)
             convBlock3 = convBlock2D(convBlock2)
@@ -201,8 +200,7 @@ class NeuralNetwork:
         _score = np.expand_dims(_score, axis=0)
         _hand = np.expand_dims(_hand, axis=0)
         _center = np.expand_dims(_center, axis=0)
-        predictWin = self.model.predict([_score, _hand, _center])
-        print(predictWin)
+        return self.model.predict([_score, _hand, _center])
 
     '''
     ### UTILITY FUNCTIONS ###
@@ -231,21 +229,20 @@ class NeuralNetwork:
         for card in player.hand:
             if card.suit == 0:
                 hand[card.value - 1] += 1
-                print("Spade {}".format(card.value))
             elif card.value == 1:
                 hand[card.suit + 13 - 1] += 1
             elif card.suit == 3 and card.value == 10:
                 hand[16] += 1
             else:
-                hand[card.value + 17 - 1] += 1
+                hand[card.value + 17 - 2] += 1
         # hand = np.expand_dims(hand, axis=2)
 
-        # center ( 6 x 17 )
-        _center = np.zeros((6, 17))
+        # center ( 13 x 17 )
+        _center = np.zeros((13, 17))
         for index, pile in enumerate(center.piles):
-            if index > 5:
-                print("There are more than 6 piles !!!")
-                break
+            #if index > 5:
+            #    print("There are more than 6 piles !!!")
+            #    break
             for card in pile.cards:
                 if card.suit == 0:
                     _center[index][card.value - 1] += 0.5
@@ -277,5 +274,7 @@ class NeuralNetwork:
     def loadCheckpoint(self, folder='checkpoint', filename='nn_model.h5'):
         filepath = os.path.join(folder, filename)
         if not os.path.exists(filepath):
-            raise ("No model in path {}".format(filepath))
-        self.model = models.load_model(filepath)
+            print("No model in path {}".format(filepath))
+            self.model = None
+        else:
+            self.model = models.load_model(filepath)
