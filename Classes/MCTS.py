@@ -3,12 +3,14 @@ import copy
 import time
 import math
 class MCTS():
-    def __init__(self,Center,Player1,Player2,firstRound):
+    def __init__(self,Center,Player1,Player2,firstRound,maxTime,maxRound):
         self.center = Center
         self.player = Player1
         self.opponent = Player2 
         self.wins = {}
         self.plays = {}
+        self.maxTime = maxTime
+        self.maxRound = maxRound
         self.best_move = -1
         self.firstRound = firstRound
     def next_state(self,Center,Player1,move):
@@ -57,7 +59,7 @@ class MCTS():
     def run_simulation(self):
         games = 0
         currTime = time.time()
-        while time.time() - currTime < 10:
+        while (games < self.maxRound) and (time.time() - currTime < self.maxTime):
             self.run_game()
             games += 1
         print("Total Games",games)
