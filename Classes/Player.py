@@ -81,7 +81,7 @@ class Player:
             return "Use "+str(move['card'])+" To Add Piles "+" , ".join(pileValues)+" To a Fixed Pile of value "+str(totalValue)
         # Put on top of existing cemented house
         elif move['Type'] == 6:
-            return "Put "+str(move['card'])+" On Top Of Fixed Pile "+str(move['pile'][0].value)
+            return "Put "+str(move['card'])+" On Top Of Fixed Pile "+str(move['piles'][0].value)
         # Pick up
         elif move['Type'] == 7:
             pileValues = [str(p.value) for p in move['piles']]
@@ -128,7 +128,7 @@ class Player:
             if [c.value for c in self.hand].count(card.value) >= 2 and not(bidMove):
                 for pile in fixedPiles:
                     if pile.value == card.value:
-                        moves.append({'Type': 6, 'card':card, 'pile': [pile]})
+                        moves.append({'Type': 6, 'card':card, 'piles': [pile]})
                         break
 
             for pickup in possiblePickUps:
@@ -164,7 +164,7 @@ class Player:
         elif move['Type'] <= 5:
             center.addCardToPiles(move['card'],move['piles'])
         elif move['Type'] == 6:
-            center.addCardToPiles(move['card'],move['pile'])
+            center.addCardToPiles(move['card'],move['piles'])
         elif move['Type'] == 7:
             if(not(test)):
                 self.cards += center.pickUpPiles(move['card'],move['piles'],self.id)
@@ -172,6 +172,7 @@ class Player:
                     self.seeps += 1
             else:
                 center.pickUpPiles(move['card'],move['piles'],self.id)
+        self.calculateScore()
     def chooseBid(self):
         eligibleCards = list(filter(lambda x: x.value >= 9, self.hand))
         random.shuffle(eligibleCards)

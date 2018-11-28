@@ -39,6 +39,8 @@ def playGame():
     print("BID VALUE IS",bidValue)
     for i in range(4):
         card = deck.dealCard()
+        human.cardHistory[card.suit][card.value - 1] = 1
+        computer.cardHistory[card.suit][card.value - 1] = 1
         center.addNewPile(Pile.Pile(card.value,[card]),True)
 
     print(center)

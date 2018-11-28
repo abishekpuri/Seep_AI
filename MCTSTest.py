@@ -13,9 +13,10 @@ def run_test():
     pile3 = Pile.Pile(9, [Card.Card(0, 1), Card.Card(1, 2), Card.Card(0, 6), Card.Card(2, 9)])
     center.piles = [pile1, pile2, pile3]
 
-    simul = MCTS.MCTS(center,player,player2)
+    simul = MCTS.MCTS(center,player,player2, True)
     simul.run_simulation()
     player.possibleMoves(center)
 
     return simul
 
+run_test()
