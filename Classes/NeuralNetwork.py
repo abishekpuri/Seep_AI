@@ -22,7 +22,7 @@ class NeuralNetwork:
     '''
     ### MAIN FUNCTIONS ###
     '''
-    def buildNetwork(self):
+    def build_network(self):
         _input = layers.Input(shape=(17, 17))
 
         def common_layer(_input):

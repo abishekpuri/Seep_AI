@@ -118,7 +118,14 @@ def playGame(nn):
 if __name__ == "__main__":
     nn = NeuralNetwork.NeuralNetwork()
     nn.build_network()
+    times = []
     for i in range(1000):
         start_time = time.time()
         playGame(nn)
-        print("--- %s seconds ---" % (time.time() - start_time))
+        # print("--- %s seconds ---" % (time.time() - start_time))
+        times.append(time.time() - start_time)
+    with open('/results/time_taken.txt', 'w') as f:
+        for i in range(len(times)):
+            string = 'Time for match {} ==> {}'.format(i, times[i])
+            f.write(string)
+
