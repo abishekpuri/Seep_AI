@@ -72,6 +72,6 @@ def test():
     #nn.load_checkpoint()
 
     # predict the value of a state
-    print(nn.predict(player, opp, center))
+    print(nn.predict_values(player, opp, center))
 
 test()

@@ -1,6 +1,7 @@
 from Classes import Card, Pile, Deck, Player, Center, Ai, MCTSNN, NeuralNetwork
 import os
 import copy
+import numpy as np
 import time
 from random import choice
 
@@ -15,7 +16,8 @@ from random import choice
 
 
 def playGame(nn):
-    gameHistory = []
+    training_state = []
+    training_value = []
     center = Center.Center()
     deck = Deck.Deck()
     player1 = Player.Player(0)
@@ -47,7 +49,7 @@ def playGame(nn):
     print(center)
     mcts_nn_p2 = MCTSNN.MCTSNN(center, player2, player1, True, nn)
     move = mcts_nn_p2.run_simulation(True, bidValue)
-    mcts_nn_p2.send_training_set()
+    training_state, training_value = mcts_nn_p2.get_training_set()
     player2.doMove(move,center)
     # player1.evaluateOpponentMove(move)
     # os.system('clear')
@@ -58,7 +60,9 @@ def playGame(nn):
     # print("Computer Hand",computer.hand)
     mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, True, nn)
     move = mcts_nn_p1.run_simulation()
-    mcts_nn_p1.send_training_set()
+    s, v = mcts_nn_p1.get_training_set()
+    training_state = np.append(training_state, s, axis=0)
+    training_value = np.append(training_value, v, axis=0)
     player1.doMove(move, center)
     # player2.evaluateOpponentMove(move)
     while len(player1.hand) > 0:
@@ -68,13 +72,17 @@ def playGame(nn):
         print(player1.hand)
         mcts_nn_p2 = MCTSNN.MCTSNN(center, player2, player1, True, nn)
         move = mcts_nn_p2.run_simulation()
-        mcts_nn_p2.send_training_set()
+        s, v = mcts_nn_p2.get_training_set()
+        training_state = np.append(training_state, s, axis=0)
+        training_value = np.append(training_value, v, axis=0)
         player2.doMove(move,center)
         # os.system('clear')
         # move = computer.makeMove(center)
         mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, True, nn)
         move = mcts_nn_p1.run_simulation()
-        mcts_nn_p1.send_training_set()
+        s, v = mcts_nn_p1.get_training_set()
+        training_state = np.append(training_state, s, axis=0)
+        training_value = np.append(training_value, v, axis=0)
         player1.doMove(move, center)
     print("HALF WAY SCORES")
     print("Human Score", player2.calculateScore())
@@ -91,13 +99,18 @@ def playGame(nn):
         print(player2.hand)
         mcts_nn_p2 = MCTSNN.MCTSNN(center, player2, player1, False, nn)
         move = mcts_nn_p2.run_simulation()
-        mcts_nn_p2.send_training_set()
+        s, v = mcts_nn_p2.get_training_set()
+        training_state = np.append(training_state, s, axis=0)
+        training_value = np.append(training_value, v, axis=0)
         player2.doMove(move, center)
         # os.system('clear')
         # move = computer.makeMove(center)
         mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, False, nn)
         move = mcts_nn_p1.run_simulation()
-        mcts_nn_p1.send_training_set()
+        s, v = mcts_nn_p1.get_training_set()
+        training_state = np.append(training_state, s, axis=0)
+        training_value = np.append(training_value, v, axis=0)
+
         player1.doMove(move, center)
         # player1.evaluateOpponentMove(move)
 
@@ -112,16 +125,16 @@ def playGame(nn):
     print("Human Score", player2.calculateScore())
     print("Computer Score", player1.calculateScore())
 
-    return gameHistory
+    return training_state, training_value
 
 
 if __name__ == "__main__":
     nn = NeuralNetwork.NeuralNetwork()
-    nn.build_network()
     times = []
-    for i in range(1000):
+    for i in range(2000):
         start_time = time.time()
-        playGame(nn)
+        training_state, training_value = playGame(nn)
+        nn.train_network(training_state, training_value)
         # print("--- %s seconds ---" % (time.time() - start_time))
         times.append(time.time() - start_time)
     with open('/results/time_taken.txt', 'w') as f:

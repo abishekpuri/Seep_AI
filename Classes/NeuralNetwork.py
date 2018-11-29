@@ -23,6 +23,7 @@ class NeuralNetwork:
     ### MAIN FUNCTIONS ###
     '''
     def build_network(self):
+        print("Building Model")
         _input = layers.Input(shape=(17, 17))
 
         def common_layer(_input):
@@ -71,22 +72,23 @@ class NeuralNetwork:
         v = value_head(res9)
 
         # default parameters for optimizer: lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False
-        self.model = tf.keras.Model(inputs=[_input], outputs=v)
-        self.model.compile(loss='mean_squared_error', optimizer=optimizers.Adam())
+        model = tf.keras.Model(inputs=[_input], outputs=v)
+        return model.compile(loss='mean_squared_error', optimizer=optimizers.Adam())
 
 
     def train_network(self, _input, z):
         # return model.fit(x = states, y = [pi, z], batch_size = BATCH_SIZE, epochs = EPOCHS)
-        for i in range(10):
-            self.model.fit(x=_input, y=z, batch_size=BATCH_SIZE, epochs=EPOCHS)
-            self.save_checkpoint()
-            print("Training finished for {}".format(EPOCHS * i))
-        print("Training finished for {}".format(EPOCHS*10))
+        self.model.fit(x=_input, y=z, batch_size=BATCH_SIZE, epochs=EPOCHS)
+        self.save_checkpoint()
+        print("Training finished for {}".format(EPOCHS))
 
 
-    def predict(self, player, opponent, center):
+    def predict_values(self, player, opponent, center):
         _input = self.state2input(player, opponent, center)
         _input = np.expand_dims(_input, axis=0)
+        return self.model.predict([_input])
+
+    def predict_input_values(self, _input):
         return self.model.predict([_input])
 
     '''
@@ -161,6 +163,6 @@ class NeuralNetwork:
         filepath = os.path.join(folder, filename)
         if not os.path.exists(filepath):
             print("No model in path {}".format(filepath))
-            self.model = None
+            self.model = self.build_network()
         else:
             self.model = models.load_model(filepath)
