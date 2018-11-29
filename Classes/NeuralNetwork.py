@@ -8,261 +8,147 @@ from tensorflow.python.keras import models, layers, initializers, regularizers, 
 BATCH_SIZE = 128
 EPOCHS = 10
 CHANNEL_AXIS = -1
-CONV_FILTER_SIZE = 32
-RES_FILTER_SIZE = 32
-FILTER_SIZE = 8
+CONV_FILTER_SIZE = 64
+RES_FILTER_SIZE = 64
+# FILTER_SIZE = 8
 NUM_POSSIBLE_MOVES = 52
 KERNEL_INITIALIZER = initializers.RandomUniform()
 KERNEL_REGULIZER = regularizers.l2()
 
 class NeuralNetwork:
     def __init__(self):
-        self.loadCheckpoint()    # loads saved model if there is any.
+        self.load_checkpoint()    # loads saved model if there is any.
 
     '''
     ### MAIN FUNCTIONS ###
     '''
-    def buildNetwork(self):
-        # Convolutional layer for 3 inputs (score, hand, center)
-        scoreInput = layers.Input(shape=(2, 17))
-        handInput = layers.Input(shape=(29, ))
-        centerInput = layers.Input(shape=(13, 17))
+    def build_network(self):
+        _input = layers.Input(shape=(17, 17))
 
-        def commonLayer(_input):
+        def common_layer(_input):
             return layers.Activation("relu")(layers.BatchNormalization(axis=CHANNEL_AXIS)(_input))
 
-        def convBlock1D(_input, filters=16, kernel=4, strides=2, padding='same'):
-            return commonLayer(layers.Conv1D(filters=filters, kernel_size=kernel,
+        def conv_block(_input, filters=64, kernel=(4, 4), strides=2, padding='same'):
+            return common_layer(layers.Conv2D(filters=filters, kernel_size=kernel,
                                              strides=strides, padding=padding,
                                              kernel_initializer=KERNEL_INITIALIZER,
                                              kernel_regularizer=KERNEL_REGULIZER)(_input))
 
-        def convBlock2D(_input, filters=16, kernel=(2, 4), strides=2, padding='same'):
-            return commonLayer(layers.Conv2D(filters=filters, kernel_size=kernel,
-                                             strides=strides, padding=padding,
-                                             kernel_initializer=KERNEL_INITIALIZER,
-                                             kernel_regularizer=KERNEL_REGULIZER)(_input))
-
-        def scoreConvLayer(score):
-            reshaped = layers.Reshape((2, 17, 1))(score)
-            convBlock1 = convBlock2D(reshaped)
-            convBlock2 = convBlock2D(convBlock1)
-            convBlock3 = convBlock2D(convBlock2)
-            convBlock4 = convBlock2D(convBlock3)
-            print("Structure of score conv layer")
-            print("convBlock1: {}".format(convBlock1.shape))
-            print("convBlock2: {}".format(convBlock2.shape))
-            print("convBlock3: {}".format(convBlock3.shape))
-            print("convBlock4: {}".format(convBlock4.shape))
-            return tf.layers.flatten(convBlock4)
-
-        def handConvLayer(hand):
-            print("Structure of hand conv layer")
-            reshaped = layers.Reshape((29, 1))(hand)
-            convBlock1 = convBlock1D(reshaped)
-            convBlock2 = convBlock1D(convBlock1)
-            convBlock3 = convBlock1D(convBlock2)
-            convBlock4 = convBlock1D(convBlock3)
-            print("convBlock1: {}".format(convBlock1.shape))
-            print("convBlock2: {}".format(convBlock2.shape))
-            print("convBlock3: {}".format(convBlock3.shape))
-            print("convBlock4: {}".format(convBlock4.shape))
-            return tf.layers.flatten(convBlock4)
-
-        # TODO: how to reduce redundacy for piles > 5
-        def centerConvLayer(center):
-            print("Structure of center conv layer")
-            reshaped = layers.Reshape((13, 17, 1))(center)
-            convBlock1 = convBlock2D(reshaped)
-            convBlock2 = convBlock2D(convBlock1)
-            convBlock3 = convBlock2D(convBlock2)
-            convBlock4 = convBlock2D(convBlock3)
-            print("convBlock1: {}".format(convBlock1.shape))
-            print("convBlock2: {}".format(convBlock2.shape))
-            print("convBlock3: {}".format(convBlock3.shape))
-            print("convBlock4: {}".format(convBlock4.shape))
-            return tf.layers.flatten(convBlock4)
-
-        def shConvLayer(sh):
-            print("Structure of sh conv layer")
-            reshaped = layers.Reshape((2, 32, 1))(sh)
-            convBlock1 = convBlock2D(reshaped)
-            convBlock2 = convBlock2D(convBlock1)
-            convBlock3 = convBlock2D(convBlock2)
-            convBlock4 = convBlock2D(convBlock3)
-            print("convBlock1: {}".format(convBlock1.shape))
-            print("convBlock2: {}".format(convBlock2.shape))
-            print("convBlock3: {}".format(convBlock3.shape))
-            print("convBlock4: {}".format(convBlock4.shape))
-            return tf.layers.flatten(convBlock4)
-
-        def hcConvLayer(hc):
-            print("Structure of hc conv layer")
-            reshaped = layers.Reshape((2, 32, 1))(hc)
-            convBlock1 = convBlock2D(reshaped)
-            convBlock2 = convBlock2D(convBlock1)
-            convBlock3 = convBlock2D(convBlock2)
-            convBlock4 = convBlock2D(convBlock3)
-            print("convBlock1: {}".format(convBlock1.shape))
-            print("convBlock2: {}".format(convBlock2.shape))
-            print("convBlock3: {}".format(convBlock3.shape))
-            print("convBlock4: {}".format(convBlock4.shape))
-            return tf.layers.flatten(convBlock4)
-
-        def shcConvLayer(shc):
-            print("Structure of shc conv layer")
-            reshaped = layers.Reshape((2, 32, 1))(shc)
-            convBlock1 = convBlock2D(reshaped)
-            convBlock2 = convBlock2D(convBlock1)
-            convBlock3 = convBlock2D(convBlock2)
-            convBlock4 = convBlock2D(convBlock3)
-            print("convBlock1: {}".format(convBlock1.shape))
-            print("convBlock2: {}".format(convBlock2.shape))
-            print("convBlock3: {}".format(convBlock3.shape))
-            print("convBlock4: {}".format(convBlock4.shape))
-            return tf.layers.flatten(convBlock4)
-
-        def resBlock1D(_input):
+        def residual_block(_input):
             shortcut = _input
-            convBlock1 = convBlock1D(_input, filters=RES_FILTER_SIZE, kernel=3, strides=1)
-            convBlock2 = convBlock1D(convBlock1, filters=RES_FILTER_SIZE, kernel=3, strides=1)
-            out = layers.add([shortcut, convBlock2])
+            conv1 = conv_block(_input, filters=RES_FILTER_SIZE, kernel=(4,4), strides=1)
+            conv2 = conv_block(conv1, filters=RES_FILTER_SIZE, kernel=(4,4), strides=1)
+            out = layers.add([shortcut, conv2])
             return out
 
-        def policyHead(_input):
-            convBlock1 = convBlock1D(_input, filters=2, kernel=1, strides=1)
-            out = layers.Dense(units=NUM_POSSIBLE_MOVES, activation='softmax')(convBlock1)
+        def policy_head(_input):
+            conv1 = conv_block(_input, filters=2, kernel=(1, 1), strides=1)
+            out = layers.Dense(units=NUM_POSSIBLE_MOVES, activation='softmax')(conv1)
             return out
 
-        def valueHead(_input):
-            reshaped = layers.Reshape((16, 32, 1))(_input)
-            convBlock1 = convBlock2D(reshaped, filters=1, kernel=1, strides=1)
-            flat = tf.layers.flatten(convBlock1)
-            print("convBlock1: {}".format(flat.shape))
-            dense1 = layers.Dense(units=512, input_shape=(512,), activation='relu')(flat)
+        def value_head(_input):
+            conv1 = conv_block(_input, filters=1, kernel=1, strides=1)
+            flat = tf.layers.flatten(conv1)
+            dense1 = layers.Dense(units=256, activation='relu')(flat)
             print("dense1: {}".format(dense1.shape))
             out = layers.Dense(units=1, activation='sigmoid')(dense1)
             print("out: {}".format(out.shape))
             return out
 
-        # combine outputs of 3 different conv layers
-        '''
-        scoreFeature: (?, 32)
-        handFeature: (?, 32)
-        centerFeature: (?, 32)
-        '''
-        # Block 1
-        scoreFeature = scoreConvLayer(scoreInput)
-        handFeature = handConvLayer(handInput)
-        centerFeature = centerConvLayer(centerInput)
-        print("Shape of scoreFeature: {}".format(scoreFeature.shape))
-        shInput = layers.concatenate([scoreFeature, handFeature], axis=1)
-        print("Shape of shInput: {}".format(shInput.shape))
-        hcInput = layers.concatenate([handFeature, centerFeature], axis=1)
-        print("Shape of hcInput: {}".format(hcInput.shape))
-
-        # Block 2
-        shFeature = shConvLayer(shInput)
-        hcFeature = hcConvLayer(hcInput)
-        shcInput = layers.concatenate([shFeature, hcFeature], axis=1)
-
-        # Block 3
-        shcFeature = shcConvLayer(shcInput)
-        mainInput = layers.Reshape((shcFeature.shape[1], 1))(shcFeature)
-        print("Shape of mainInput: {}".format(mainInput.shape))
-
         # main blocks
-        conv = convBlock1D(mainInput, filters=CONV_FILTER_SIZE)
-        res1 = resBlock1D(conv)
-        res2 = resBlock1D(res1)
-        res3 = resBlock1D(res2)
-        res4 = resBlock1D(res3)
-        res5 = resBlock1D(res4)
+        reshape = layers.Reshape((17, 17, 1))(_input)
+        conv1 = conv_block(reshape, filters=CONV_FILTER_SIZE)
+        res1 = residual_block(conv1)
+        res2 = residual_block(res1)
+        res3 = residual_block(res2)
+        res4 = residual_block(res3)
+        res5 = residual_block(res4)
+        res6 = residual_block(res5)
+        res7 = residual_block(res6)
+        res8 = residual_block(res7)
+        res9 = residual_block(res8)
         # p = policy_head(res5)
-        v = valueHead(res5)
+        v = value_head(res9)
 
         # default parameters for optimizer: lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False
-        self.model = tf.keras.Model(inputs=[scoreInput, handInput, centerInput], outputs=v)
+        self.model = tf.keras.Model(inputs=[_input], outputs=v)
         self.model.compile(loss='mean_squared_error', optimizer=optimizers.Adam())
 
 
-    def trainNetwork(self, _score, _hand, _center, z):
+    def train_network(self, _input, z):
         # return model.fit(x = states, y = [pi, z], batch_size = BATCH_SIZE, epochs = EPOCHS)
         for i in range(10):
-            self.model.fit(x=[_score, _hand, _center], y=z, batch_size=BATCH_SIZE, epochs=EPOCHS)
-            self.saveCheckpoint()
+            self.model.fit(x=_input, y=z, batch_size=BATCH_SIZE, epochs=EPOCHS)
+            self.save_checkpoint()
             print("Training finished for {}".format(EPOCHS * i))
         print("Training finished for {}".format(EPOCHS*10))
 
 
     def predict(self, player, opponent, center):
-        _score, _hand, _center = self.stateToInput(player, opponent, center)
-        _score = np.expand_dims(_score, axis=0)
-        _hand = np.expand_dims(_hand, axis=0)
-        _center = np.expand_dims(_center, axis=0)
-        return self.model.predict([_score, _hand, _center])
+        _input = self.state2input(player, opponent, center)
+        _input = np.expand_dims(_input, axis=0)
+        return self.model.predict([_input])
 
     '''
     ### UTILITY FUNCTIONS ###
     '''
-    def stateToInput(self, player, opponent, center):
+    def state2input(self, player, opponent, center):
         # score ( 2 x 17 )
-        score = np.zeros((2, 17))
+        _score = np.zeros((2, 17))
         for card in player.cards:
             if card.suit == 0:
-                score[0][card.value - 1] += 1
+                _score[0][card.value - 1] += 1
             elif card.value == 1:
-                score[0][card.suit + 13 - 1] += 1
+                _score[0][card.suit + 13 - 1] += 1
             elif card.suit == 3 and card.value == 10:
-                score[0][16] += 1
+                _score[0][16] += 1
         for card in opponent.cards:
             if card.suit == 0:
-                score[1][card.value - 1] += 1
+                _score[1][card.value - 1] += 1
             elif card.value == 1:
-                score[1][card.suit + 13 - 1] += 1
+                _score[1][card.suit + 13 - 1] += 1
             elif card.suit == 3 and card.value == 10:
-                score[1][16] += 1
+                _score[1][16] += 1
         # score = np.expand_dims(score, axis=2)
 
-        # hand ( 1 x 29 )
-        hand = np.zeros(29)
+        # hand ( 2 x 17 )
+        _hand = np.zeros((2, 17))
         for card in player.hand:
             if card.suit == 0:
-                hand[card.value - 1] += 1
+                _hand[0][card.value - 1] += 1
             elif card.value == 1:
-                hand[card.suit + 13 - 1] += 1
+                _hand[0][card.suit + 13 - 1] += 1
             elif card.suit == 3 and card.value == 10:
-                hand[16] += 1
+                _hand[0][16] += 1
             else:
-                hand[card.value + 17 - 2] += 1
+                _hand[1][card.value-2] += 1   # last 5 will be padded with zeros
         # hand = np.expand_dims(hand, axis=2)
 
         # center ( 13 x 17 )
         _center = np.zeros((13, 17))
         for index, pile in enumerate(center.piles):
-            #if index > 5:
-            #    print("There are more than 6 piles !!!")
-            #    break
             for card in pile.cards:
                 if card.suit == 0:
-                    _center[index][card.value - 1] += 0.5
+                    _center[12-index][card.value - 1] += 0.5
                 elif card.value == 1:
-                    _center[index][card.suit + 13 - 1] += 0.5
+                    _center[12-index][card.suit + 13 - 1] += 0.5
                 elif card.suit == 3 and card.value == 10:
-                    _center[index][16] += 0.5
-            _center[index][pile.value] += 1
+                    _center[12-index][16] += 0.5
+            _center[12-index][pile.value] += 1
 
+        _input = np.append(_center, _hand, axis=0)
+        _input = np.append(_input, _score, axis=0)
         # centerVector = centerVector[~np.all(centerVector == 0, axis=1)]
         # _center = np.expand_dims(_center, axis=2)
 
-        return score, hand, _center
+        return _input
 
-    def showModelSummary(self):
+    def show_model_summary(self):
         if self.model is None:
             return
         self.model.summary()
 
-    def saveCheckpoint(self, folder='checkpoint', filename='nn_model.h5'):
+    def save_checkpoint(self, folder='checkpoint', filename='nn_model.h5'):
         filepath = os.path.join(folder, filename)
         if not os.path.exists(folder):
             print("Checkpoint Directory does not exist! Making directory {}".format(folder))
@@ -271,7 +157,7 @@ class NeuralNetwork:
             print("Checkpoint Directory exists! ")
         models.save_model(self.model, filepath)
 
-    def loadCheckpoint(self, folder='checkpoint', filename='nn_model.h5'):
+    def load_checkpoint(self, folder='checkpoint', filename='nn_model.h5'):
         filepath = os.path.join(folder, filename)
         if not os.path.exists(filepath):
             print("No model in path {}".format(filepath))
