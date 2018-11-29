@@ -16,6 +16,8 @@ import argparse
 timeForMCTS = 1000000
 
 def playGame():
+    humanScoreHistory = []
+    computerScoreHistory = []
     gameHistory = []
     center = Center.Center()
     deck = Deck.Deck()
@@ -49,6 +51,7 @@ def playGame():
 
     print(center)
     move = human.makeMove(center,True,bidValue)
+    humanScoreHistory.append(human.calculateScore())
     computer.evaluateOpponentMove(move)
     #human.makeMove(center,True,bidValue)
     for i in range(8):
@@ -59,6 +62,7 @@ def playGame():
     print("Computer Hand",computer.hand)
     move = MCTS.MCTS(center,computer,human,True,timeForMCTS,roundForMCTS).run_simulation()
     computer.doMove(move,center)
+    computerScoreHistory.append(computer.calculateScore())
     human.evaluateOpponentMove(move)
 
     while len(computer.hand) > 0:
@@ -68,6 +72,7 @@ def playGame():
         print(human.hand)
         # move = human.HumanChooseMove(center,False)
         move = human.makeMove(center)
+        humanScoreHistory.append(human.calculateScore())
         computer.evaluateOpponentMove(move)
         print(center)
         print(computer.hand)
@@ -75,6 +80,7 @@ def playGame():
         # move = computer.makeMove(center)
         move = MCTS.MCTS(center,computer,human,True,timeForMCTS,roundForMCTS).run_simulation()
         computer.doMove(move,center)
+        computerScoreHistory.append(computer.calculateScore())
         human.evaluateOpponentMove(move)
 
     print("HALF WAY SCORES")
@@ -92,12 +98,14 @@ def playGame():
         print(human.hand)
         # move = human.HumanChooseMove(center,False)
         move = human.makeMove(center)
+        humanScoreHistory.append(human.calculateScore())
         computer.evaluateOpponentMove(move)
         print(center)
         print(computer.hand)
         print("COMPUTERS MOVE IS:")
         move = MCTS.MCTS(center,computer,human,False,timeForMCTS,roundForMCTS).run_simulation()
         computer.doMove(move,center)
+        computerScoreHistory.append(computer.calculateScore())
         human.evaluateOpponentMove(move)
 
     
@@ -111,7 +119,7 @@ def playGame():
     print("FINAL SCORE")
     print("Human Score",human.calculateScore())
     print("Computer Score",computer.calculateScore())
-    return (gameHistory, human.calculateScore(), computer.calculateScore())
+    return (gameHistory, human.calculateScore(), computer.calculateScore(), humanScoreHistory, computerScoreHistory)
 
 # playGame()
 
@@ -146,13 +154,13 @@ if __name__ == "__main__":
         Ai.scoresHistory = []
         MCTS.winRateHistory = []
         start_time = time.time()
-        history, hmScore, aiScore = playGame()
+        history, hmScore, aiScore, hmScoreHis, aiScoreHis = playGame()
         newScore = pd.Series({'MCTS':hmScore, 'Expectiminimax':aiScore},name=currentGame)
         scoresDf = scoresDf.append(newScore)
         scoresDf.to_csv(resultDir+scoresFile)
         print("--- %s seconds ---" % (time.time() - start_time))
         # print(len(Ai.scoresHistory))
         # print(len(MCTS.winRateHistory))
-        gameStat = pd.DataFrame({'Expectiminimax scores':Ai.scoresHistory, 'MCTS win rates':MCTS.winRateHistory})
+        gameStat = pd.DataFrame({'Expectiminimax scores':Ai.scoresHistory, 'Expectiminimax game scores':hmScoreHis, 'MCTS win rates':MCTS.winRateHistory, 'MCTS game scores':aiScoreHis})
         gameStat.to_csv(resultDir+gameStatDir+'gameplay'+str(currentGame)+'.csv')
         currentGame+=1
