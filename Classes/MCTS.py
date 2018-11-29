@@ -2,11 +2,14 @@ from random import choice
 import copy
 import time
 import math
+
+winRateHistory = []
+
 class MCTS():
     def __init__(self,Center,Player1,Player2,firstRound,maxTime,maxRound):
-        self.center = Center
-        self.player = Player1
-        self.opponent = Player2 
+        self.center =  copy.deepcopy(Center)
+        self.player =  copy.deepcopy(Player1)
+        self.opponent =  copy.deepcopy(Player2)
         self.wins = {}
         self.plays = {}
         self.maxTime = maxTime
@@ -70,8 +73,10 @@ class MCTS():
             new_center = copy.deepcopy(self.center)
             new_player = copy.deepcopy(self.player)
             new_player.doMove(move,new_center)
-            if self.wins[(str(new_player),str(new_center))]/self.plays[(str(new_player),str(new_center))] > curr_max:
-                curr_max = self.wins[(str(new_player),str(new_center))]/self.plays[(str(new_player),str(new_center))]
-                curr_move = move
+            if (str(new_player),str(new_center)) in self.wins and (str(new_player),str(new_center)) in self.plays:
+                if self.wins[(str(new_player),str(new_center))]/self.plays[(str(new_player),str(new_center))] > curr_max:
+                    curr_max = self.wins[(str(new_player),str(new_center))]/self.plays[(str(new_player),str(new_center))]
+                    curr_move = move
         print("Move",curr_move,"Is the best option, with win rate",curr_max)
+        winRateHistory.append(curr_max)
         return curr_move

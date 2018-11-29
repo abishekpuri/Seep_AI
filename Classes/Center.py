@@ -163,7 +163,10 @@ class Center:
                 self.piles.pop(self.piles.index(pile))
                 matchingPileIndex = self.piles.index(p_)
         for c in cards:
-            self.piles[self.piles.index(p_)].addCard(c,False)
+            try:
+                self.piles[self.piles.index(p_)].addCard(c,False)
+            except:
+                print("An exception occurred", p_)
         
     def addNewPile(self,pile,bidStage=False):
         for p in self.piles:
