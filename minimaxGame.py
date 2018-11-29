@@ -147,7 +147,7 @@ gameFile = 'gameplay'
 if __name__ == "__main__":
     try:
         scoresDf = pd.read_csv(resultDir+scoresFile, index_col=0)
-    except pd.io.common.EmptyDataError:
+    except pd.io.common.EmptyDataError and FileNotFoundError:
         print("WARMING:",resultDir+scoresFile, "is empty")
         scoresDf = pd.DataFrame(columns=['MCTS', 'Expectiminimax'])
     while currentGame < maxGameplay:
