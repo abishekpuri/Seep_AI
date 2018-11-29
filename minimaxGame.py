@@ -12,7 +12,9 @@ import pandas as pd
 #         cards[13*card.suit + card.value - 1] = 1
 #     # There is a 13-D vector representing the spades, 0 if that card has not been seen, 1 
 
-timeForMCTS = 10
+
+# First 10 game is 10, last 10 game is 20
+timeForMCTS = 20
 
 def playGame():
     gameHistory = []
@@ -122,14 +124,16 @@ if __name__ == "__main__":
     except pd.io.common.EmptyDataError:
         print("WARMING:",resultDir+scoresFile, "is empty")
         scoresDf = pd.DataFrame(columns=['MCTS', 'Expectiminimax'])
-    currentGame = 0
-    maxGameplay = 5
+    currentGame = 10
+    maxGameplay = 20
     while currentGame < maxGameplay:
+        print('Game', currentGame)
         Ai.scoresHistory = []
         MCTS.winRateHistory = []
         start_time = time.time()
         history, hmScore, aiScore = playGame()
-        scoresDf = scoresDf.append({'MCTS':hmScore, 'Expectiminimax':aiScore}, ignore_index=True)
+        newScore = pd.Series({'MCTS':hmScore, 'Expectiminimax':aiScore},name=currentGame)
+        scoresDf = scoresDf.append(newScore)
         scoresDf.to_csv(resultDir+scoresFile)
         print("--- %s seconds ---" % (time.time() - start_time))
         # print(len(Ai.scoresHistory))

@@ -9,13 +9,14 @@ scoresHistory = []
 
 # Most important function
 def evaluateState(state, agent, myTurn):
+    weights = [1, 1, 1, 100]
     center, opponentScore = state
-    score = agent.calculateScore() - opponentScore
-    score -= sum([p.score for p in center.piles]) # don't leave scores in the center because opponent may take it
-    score -= sum([not p.fixed for p in center.piles]) # penalty of the number of piles
+    score = (agent.calculateScore() - opponentScore)*weights[0]
+    score -= sum([p.score for p in center.piles])*weights[1] # don't leave scores in the center because opponent may take it
+    score -= sum([not p.fixed for p in center.piles])*weights[2] # penalty of the number of piles
     if len(center.piles) == 0:
         if myTurn:
-            score -= 50 * 100 # prediction of leaving no pile in the center, which means opponent got a seep
+            score -= 50*weights[3] # prediction of leaving no pile in the center, which means opponent got a seep
     return score, 0
 
 def convertArrayToCards(array):
