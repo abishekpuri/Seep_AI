@@ -29,15 +29,42 @@ class MCTSNN():
         p1 = copy.deepcopy(Player1)
         p1.doMove(move, center)
         return p1, center
-
+    '''
     def predictions_from_nn(self, center, player, opponent):
         predictions = []
+        _inputs = []
         for move in player.moves:
             new_player, new_center = self._next_state(center, player, move)
-            value = self.nn.predict(new_player, opponent, new_center)[0][0]
+            value = self.nn.predict_values(new_player, opponent, new_center)[0][0]
             predictions.append((value, move))
         #print("Predictions from nn")
-        #print(predictions)
+        print(predictions)
+        return predictions
+    '''
+    def predictions_from_nn(self, center, player, opponent):
+        predictions = []
+        _inputs = []
+        _moves = []
+
+        for index, move in enumerate(player.moves):
+            new_player, new_center = self._next_state(center, player, move)
+            _input = self.nn.state2input(new_player, opponent, new_center)
+            if index == 0:
+                _inputs = np.expand_dims(_input, axis=0)
+            else:
+                _inputs = np.append(_inputs, np.expand_dims(_input, axis=0), axis=0)
+            _moves.append(move)
+
+        #print(_inputs)
+
+        _values = self.nn.predict_input_values(_inputs)[0]
+        # print("What is values.sahpe {} ".format(_values.shape))
+        # print(_values)
+
+        for i in range(len(_values)):
+            predictions.append((_values[i], _moves[i]))
+        #print("Predictions from nn")
+        print(predictions)
         return predictions
 
     def run_game(self, bidMove=False, bid=0, debug=False):
@@ -62,7 +89,11 @@ class MCTSNN():
                 p1move = max(values, key=lambda x: x[0])[1]
             else:
                 values = self.predictions_from_nn(center, p1, p2)
-                p1move = max(values, key=lambda x: x[0])[1]
+                maximum = max(values, key=lambda x: x[0])
+                if np.isnan(maximum[0]):
+                    p1move = choice(p1.moves)
+                else:
+                    p1move = maximum[1]
             p1.doMove(p1move, center)
             if expand and (str(p1), str(center)) not in plays:
                 expand = False
@@ -88,7 +119,7 @@ class MCTSNN():
     def run_simulation(self, bidMove=False, bid=0):
         games = 0
         currTime = time.time()
-        while time.time() - currTime < 60:
+        while time.time() - currTime < 10:
             self.run_game(bidMove, bid)
             games += 1
         print("Total Games", games)
@@ -109,10 +140,10 @@ class MCTSNN():
         print("Move", curr_move, "Is the best option, with win rate", curr_max)
         return curr_move
 
-    def send_training_set(self):
+    def get_training_set(self):
         _inputs = []
         values = []
-        print('SEND TRAINING SET')
+        print('Generate training set')
         for i in range(len(self.visited_states)):
             player_str, center_str = str(self.visited_states[i]['player']), str(self.visited_states[i]['center'])
             if (player_str, center_str) in self.plays:
@@ -128,4 +159,5 @@ class MCTSNN():
             else:
                 _inputs = np.append(_inputs, np.expand_dims(_input, axis=0), axis=0)
             values = np.append(values, value)
-        self.nn.train_network(_inputs, values)
+        return _inputs, values
+        # self.nn.train_network(_inputs, values)
