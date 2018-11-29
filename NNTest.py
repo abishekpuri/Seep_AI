@@ -66,7 +66,7 @@ def test():
     out = np.array([0.5, 0.2])
     print(out.shape)
     # build & train
-    nn.buildNetwork()
+    nn.build_network()
     nn.train_network(batch, out)
     nn.show_model_summary()
     #nn.load_checkpoint()
