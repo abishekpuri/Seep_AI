@@ -130,6 +130,7 @@ parser.add_argument('-l', nargs=4, help='Weights in evaluation function', requir
 parser.add_argument("-r", help='Round in MCTS', required=True, type=int)
 parser.add_argument("-c", help='Current gameplay', required=True, type=int)
 parser.add_argument("-m", help='Maximun gameplay', required=True, type=int)
+parser.add_argument("-d", help='Results directory', required=True, type=str)
 args = parser.parse_args()
 # print(args.d1)
 Ai.depth1 = args.d1
@@ -138,10 +139,10 @@ Ai.weights = args.l
 roundForMCTS = args.r
 currentGame = args.c
 maxGameplay = args.m
-
-resultDir = 'results/'
+resultDir = args.d
 gameStatDir = 'gameResult/'
 scoresFile = 'scores.csv'
+gameFile = 'gameplay'
 
 if __name__ == "__main__":
     try:
@@ -162,5 +163,5 @@ if __name__ == "__main__":
         # print(len(Ai.scoresHistory))
         # print(len(MCTS.winRateHistory))
         gameStat = pd.DataFrame({'Expectiminimax scores':Ai.scoresHistory, 'Expectiminimax game scores':hmScoreHis, 'MCTS win rates':MCTS.winRateHistory, 'MCTS game scores':aiScoreHis})
-        gameStat.to_csv(resultDir+gameStatDir+'gameplay'+str(currentGame)+'.csv')
+        gameStat.to_csv(resultDir+gameStatDir+gameFile+str(currentGame)+'.csv')
         currentGame+=1
