@@ -110,9 +110,7 @@ class MCTSNN():
         return curr_move
 
     def send_training_set(self):
-        scores = []
-        hands = []
-        centers = []
+        _inputs = []
         values = []
         print('SEND TRAINING SET')
         for i in range(len(self.visited_states)):
@@ -124,14 +122,10 @@ class MCTSNN():
                 continue
             state = self.visited_states[i]
             player, opponent, center, value = state['player'], state['opponent'], state['center'], state['value']
-            _score, _hand, _center = self.nn.stateToInput(player, opponent, center)
+            _input = self.nn.state2input(player, opponent, center)
             if i == 0:
-                scores = np.expand_dims(_score, axis=0)
-                hands = np.expand_dims(_hand, axis=0)
-                centers = np.expand_dims(_center, axis=0)
+                _inputs = np.expand_dims(_input, axis=0)
             else:
-                scores = np.append(scores, np.expand_dims(_score, axis=0), axis=0)
-                hands = np.append(hands, np.expand_dims(_hand, axis=0), axis=0)
-                centers = np.append(centers, np.expand_dims(_center, axis=0), axis=0)
+                _inputs = np.append(_inputs, np.expand_dims(_input, axis=0), axis=0)
             values = np.append(values, value)
-        self.nn.trainNetwork(scores, hands, centers, values)
+        self.nn.train_network(_inputs, values)

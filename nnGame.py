@@ -117,7 +117,7 @@ def playGame(nn):
 
 if __name__ == "__main__":
     nn = NeuralNetwork.NeuralNetwork()
-    nn.buildNetwork()
+    nn.build_network()
     for i in range(1000):
         start_time = time.time()
         playGame(nn)
