@@ -1,6 +1,9 @@
 import random
 from . import Card
 
+# SEED = 123
+# random.seed(SEED)
+
 class Deck: 
     def __init__(self):
         self.cards = []

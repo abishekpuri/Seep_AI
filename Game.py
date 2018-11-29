@@ -17,7 +17,6 @@ def playGame():
     deck = Deck.Deck()
     computer = Player.Player(0)
     human = Player.Player(1)
-
     validBidHand = False
     while not(validBidHand):
         deck = Deck.Deck()
@@ -50,7 +49,7 @@ def playGame():
         computer.addCardsToHand([deck.dealCard()])
     # print("COMPUTERS HAND")
     # print("Computer Hand",computer.hand)
-    move = MCTS.MCTS(center,computer,human,True).run_simulation()
+    move = MCTS.MCTS(center,computer,human,True,5,1500).run_simulation()
     computer.doMove(move,center)
     human.evaluateOpponentMove(move)
     while len(computer.hand) > 0:
@@ -58,11 +57,13 @@ def playGame():
         # human.makeMove(center)
         print(center)
         print(human.hand)
-        move = human.HumanChooseMove(center,False)
+        #move = human.HumanChooseMove(center,False)
+        move = MCTS.MCTS(center,human,computer,True,5,1500).run_simulation()
+        human.doMove(move,center)
         computer.evaluateOpponentMove(move)
         # os.system('clear')
         #move = computer.makeMove(center)
-        move = MCTS.MCTS(center,computer,human,True).run_simulation()
+        move = MCTS.MCTS(center,computer,human,True,5,1500).run_simulation()
         computer.doMove(move,center)
         human.evaluateOpponentMove(move)
     print("HALF WAY SCORES")
@@ -78,11 +79,13 @@ def playGame():
         # human.makeMove(center)
         print(center)
         print(human.hand)
-        move = human.HumanChooseMove(center,False)
+        #move = human.HumanChooseMove(center,False)
+        move = MCTS.MCTS(center,human,computer,False,5,1500).run_simulation()
+        human.doMove(move,center)
         computer.evaluateOpponentMove(move)
         # os.system('clear')
         #move = computer.makeMove(center)
-        move = MCTS.MCTS(center,computer,human,False).run_simulation()
+        move = MCTS.MCTS(center,computer,human,False,5,1500).run_simulation()
         computer.doMove(move,center)
         human.evaluateOpponentMove(move)
 
