@@ -31,23 +31,28 @@ class MCTSNN():
         p1 = copy.deepcopy(Player1)
         p1.doMove(move, center)
         return p1, center
-    '''
-    def predictions_from_nn(self, center, player, opponent):
-        predictions = []
-        _inputs = []
-        for move in player.moves:
-            new_player, new_center = self._next_state(center, player, move)
-            value = self.nn.predict_values(new_player, opponent, new_center)[0][0]
-            predictions.append((value, move))
-        #print("Predictions from nn")
-        print(predictions)
-        return predictions
-    '''
-    def predictions_from_nn(self, center, player, opponent):
-        predictions = []
-        _inputs = []
-        _moves = []
 
+    def predictions_nn(self, center, player, opponent, notplayed):
+        predictions = []
+        _moves = []
+        _inputs = []
+        for index, move in enumerate(notplayed):
+            new_player, new_center = self._next_state(center, player, move)
+            _input = self.nn.state2input(new_player, opponent, new_center)
+            if index == 0:
+                _inputs = np.expand_dims(_input, axis=0)
+            else:
+                _inputs = np.append(_inputs, np.expand_dims(_input, axis=0), axis=0)
+            _moves.append(move)
+        _values = self.nn.predict_input_values(_inputs)[0]
+        for i in range(len(_values)):
+            predictions.append((_values[i], _moves[i]))
+        return predictions
+
+    def predictions_from_nn(self, center, player, opponent):
+        _moves = []
+        predictions = []
+        _inputs = []
         for index, move in enumerate(player.moves):
             new_player, new_center = self._next_state(center, player, move)
             _input = self.nn.state2input(new_player, opponent, new_center)
@@ -57,7 +62,7 @@ class MCTSNN():
                 _inputs = np.append(_inputs, np.expand_dims(_input, axis=0), axis=0)
             _moves.append(move)
 
-        #print(_inputs)
+        print(_inputs)
 
         _values = self.nn.predict_input_values(_inputs)[0]
         # print("What is values.sahpe {} ".format(_values.shape))
@@ -83,19 +88,42 @@ class MCTSNN():
                 break
             # generate next states of possible moves
             next_states = {str(move): self.next_state(center, p1, move) for move in p1.moves}
-            if all(plays.get(next_states[str(move)]) for move in p1.moves):
-                log_total = sum(plays[next_states[str(move)]] for move in p1.moves)
-                values = [(wins[next_states[str(move)]] / plays[next_states[str(move)]] +
-                     1.4 * math.sqrt(log_total / plays[next_states[str(move)]]), move) for move in p1.moves]
-                p1move = max(values, key=lambda x: x[0])[1]
-            else:
-                values = self.predictions_from_nn(center, p1, p2)
-                maximum = max(values, key=lambda x: x[0])
-                if np.isnan(maximum[0]):
-                    p1move = choice(p1.moves)
+            win_rates = []
+            notplayed = []
+            predictions = []
+            for move in p1.moves:
+                played = plays.get(next_states[str(move)])
+                if played:
+                    win_rate = wins[next_states[str(move)]] / played
+                    win_rates.append((win_rate, move))
                 else:
-                    p1move = maximum[1]
+                    notplayed.append(move)
+            print('notplayed')
+            print(notplayed)
+            if len(notplayed) != 0:
+                predictions = self.predictions_nn(center, p1, p2, notplayed)
+            print('predictions')
+            print(predictions)
+            values = win_rates + predictions
+            print('values')
+            print(values)
+            for e in values:
+                if np.isnan(e[0]):
+                    v = e[1]
+                    values.remove(e)
+                    values.append((0,v))
+            maximum = max(values, key=lambda x: x[0])[0]
+            if maximum == 0:
+                p1move = choice(p1.moves)
+            else:
+                for e in values:
+                    k = e[0] / maximum
+                    v = e[1]
+                    values.remove(e)
+                    values.append((k, v))
+                p1move = max(values, key=lambda x: x[0])[1]
             p1.doMove(p1move, center)
+
             if expand and (str(p1), str(center)) not in plays:
                 expand = False
                 plays[(str(p1), str(center))] = 0
