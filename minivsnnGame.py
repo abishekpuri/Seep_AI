@@ -48,11 +48,13 @@ def playGame(nn):
         human.cardHistory[card.suit][card.value - 1] = 1
         computer.cardHistory[card.suit][card.value - 1] = 1
         center.addNewPile(Pile.Pile(card.value,[card]),True)
+    human.seeStartingConfiguration(center)
+    computer.seeStartingConfiguration(center)
 
     print(center)
     move = human.makeMove(center,True,bidValue)
     humanScoreHistory.append(human.calculateScore())
-    computer.evaluateOpponentMove(move)
+    # computer.evaluateOpponentMove(move)
     #human.makeMove(center,True,bidValue)
     for i in range(8):
         human.addCardsToHand([deck.dealCard()])
@@ -61,7 +63,7 @@ def playGame(nn):
     print(center)
     print("Computer Hand",computer.hand)
     mcts_nn = MCTSNN.MCTSNN(center, computer, human, True, nn)
-    move = mcts_nn.run_simulation(True)
+    move = mcts_nn.run_simulation()
     computer.doMove(move,center)
     computerScoreHistory.append(computer.calculateScore())
     human.evaluateOpponentMove(move)
