@@ -62,8 +62,6 @@ class MCTSNN():
                 _inputs = np.append(_inputs, np.expand_dims(_input, axis=0), axis=0)
             _moves.append(move)
 
-        print(_inputs)
-
         _values = self.nn.predict_input_values(_inputs)[0]
         # print("What is values.sahpe {} ".format(_values.shape))
         # print(_values)
@@ -98,15 +96,9 @@ class MCTSNN():
                     win_rates.append((win_rate, move))
                 else:
                     notplayed.append(move)
-            print('notplayed')
-            print(notplayed)
             if len(notplayed) != 0:
                 predictions = self.predictions_nn(center, p1, p2, notplayed)
-            print('predictions')
-            print(predictions)
             values = win_rates + predictions
-            print('values')
-            print(values)
             for e in values:
                 if np.isnan(e[0]):
                     v = e[1]
