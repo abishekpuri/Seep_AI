@@ -95,6 +95,7 @@ def playGame(nn):
     while len(player1.hand) > 0:
         # print("HUMANS MOVE IS:")
         # human.makeMove(center)
+
         print(center)
         print(player2.hand)
         mcts_nn_p2 = MCTSNN.MCTSNN(center, player2, player1, False, nn)
@@ -105,13 +106,16 @@ def playGame(nn):
         player2.doMove(move, center)
         # os.system('clear')
         # move = computer.makeMove(center)
-        mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, False, nn)
-        move = mcts_nn_p1.run_simulation()
-        s, v = mcts_nn_p1.get_training_set()
-        training_state = np.append(training_state, s, axis=0)
-        training_value = np.append(training_value, v, axis=0)
 
-        player1.doMove(move, center)
+        if len(player1.hand) == 1 and len(player1.moves) == 1:
+            player1.doMove(player1.moves[0], center)
+        else:
+            mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, False, nn)
+            move = mcts_nn_p1.run_simulation()
+            s, v = mcts_nn_p1.get_training_set()
+            training_state = np.append(training_state, s, axis=0)
+            training_value = np.append(training_value, v, axis=0)
+            player1.doMove(move, center)
         # player1.evaluateOpponentMove(move)
 
     # print("FINAL CENTER")

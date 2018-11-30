@@ -60,11 +60,10 @@ class MCTSNN():
         _values = self.nn.predict_input_values(_inputs)[0]
         # print("What is values.sahpe {} ".format(_values.shape))
         # print(_values)
-
         for i in range(len(_values)):
             predictions.append((_values[i], _moves[i]))
         #print("Predictions from nn")
-        print(predictions)
+        #print(predictions)
         return predictions
 
     def run_game(self, bidMove=False, bid=0, debug=False):
@@ -74,7 +73,7 @@ class MCTSNN():
         p1 = copy.deepcopy(self.player)
         p2 = copy.deepcopy(self.opponent)
         expand = True
-        while len(p1.hand) > 0 or len(p1.hand) > 0:
+        while len(p1.hand) > 0 or len(p2.hand) > 0:
             # generate all possible moves
             p1.possibleMoves(center, bidMove, bid)
             # if no moves, break
@@ -119,7 +118,7 @@ class MCTSNN():
     def run_simulation(self, bidMove=False, bid=0):
         games = 0
         currTime = time.time()
-        while time.time() - currTime < 10:
+        while time.time() - currTime < 5:
             self.run_game(bidMove, bid)
             games += 1
         print("Total Games", games)
