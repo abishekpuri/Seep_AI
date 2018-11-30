@@ -140,9 +140,7 @@ if __name__ == "__main__":
         training_state, training_value = playGame(nn)
         nn.train_network(training_state, training_value)
         # print("--- %s seconds ---" % (time.time() - start_time))
-        times.append(time.time() - start_time)
-    with open('/results/time_taken.txt', 'w') as f:
-        for i in range(len(times)):
-            string = 'Time for match {} ==> {}'.format(i, times[i])
+        with open('time_taken.txt', 'w') as f:
+            string = 'Time for match {} ==> {}'.format(i, time.time() - start_time)
             f.write(string)
-
+    print("End of 2000 Matches")
