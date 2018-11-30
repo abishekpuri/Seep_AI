@@ -1,7 +1,26 @@
 # Seep_AI
 Building An AI Agent to play two-player version of Seep
 
-To play the game, run python Game.py
+To play the game, 
+```
+usage: Game.py [-h] [-d1 D1] [-d2 D2] [-l L L L L] [-r R] {mcts,emm,nn}
+
+positional arguments:
+  {mcts,emm,nn}  Type of agent
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -d1 D1         Depth in expectimax
+  -d2 D2         Depth in minimax
+  -l L L L L     Weights in evaluation function
+  -r R           Round in MCTS
+```
+For example, run ```python Game.py mcts -r 1500``` to play a game with MCTS using 1500 game simulation per move. :)
+
+# For MCTS vs MCTS
+Run ```python MCTSGame.py```.
+
+NOTE: Please kindly choose the bid and do the first move for the MCTS model.
 
 # For expectiminimax vs MCTS
 ```
