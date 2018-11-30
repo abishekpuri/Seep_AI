@@ -73,7 +73,8 @@ class NeuralNetwork:
 
         # default parameters for optimizer: lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False
         model = tf.keras.Model(inputs=[_input], outputs=v)
-        return model.compile(loss='mean_squared_error', optimizer=optimizers.Adam())
+        model.compile(loss='mean_squared_error', optimizer=optimizers.Adam())
+        return model
 
 
     def train_network(self, _input, z):
