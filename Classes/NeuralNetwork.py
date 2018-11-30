@@ -29,7 +29,7 @@ class NeuralNetwork:
         def common_layer(_input):
             return layers.Activation("relu")(layers.BatchNormalization(axis=CHANNEL_AXIS)(_input))
 
-        def conv_block(_input, filters=64, kernel=(4, 4), strides=2, padding='same'):
+        def conv_block(_input, filters=64, kernel=(4, 4), strides=1, padding='same'):
             return common_layer(layers.Conv2D(filters=filters, kernel_size=kernel,
                                              strides=strides, padding=padding,
                                              kernel_initializer=KERNEL_INITIALIZER,
