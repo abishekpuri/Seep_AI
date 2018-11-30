@@ -141,7 +141,7 @@ if __name__ == "__main__":
         nn.train_network(training_state, training_value)
         # print("--- %s seconds ---" % (time.time() - start_time))
         times.append(time.time() - start_time)
-    with open('/results/time_taken.txt', 'w') as f:
+    with open('time_taken.txt', 'w') as f:
         for i in range(len(times)):
             string = 'Time for match {} ==> {}'.format(i, times[i])
             f.write(string)

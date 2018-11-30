@@ -5,6 +5,8 @@ import time
 import math
 import numpy as np
 
+winRateHistory = []
+
 class MCTSNN():
     def __init__(self,Center,Player1,Player2,firstRound, nn):
         self.center = Center
@@ -137,6 +139,7 @@ class MCTSNN():
                 curr_max = win_rate
                 curr_move = move
         print("Move", curr_move, "Is the best option, with win rate", curr_max)
+        winRateHistory.append(curr_max)
         return curr_move
 
     def get_training_set(self):
