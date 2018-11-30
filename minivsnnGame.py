@@ -79,9 +79,12 @@ def playGame(nn):
         print(computer.hand)
         print("COMPUTERS MOVE IS:")
         # move = computer.makeMove(center)
-        mcts_nn = MCTSNN.MCTSNN(center, computer, human, True, nn)
-        move = mcts_nn.run_simulation(True)
-        computer.doMove(move, center)
+        if len(computer.hand) == 1 and len(computer.moves) == 1:
+            computer.doMove(computer.moves[0], center)
+        else:
+            mcts_nn_p1 = MCTSNN.MCTSNN(center, computer, human, False, nn)
+            move = mcts_nn_p1.run_simulation()
+            computer.doMove(move, center)
         computerScoreHistory.append(computer.calculateScore())
         human.evaluateOpponentMove(move)
 
