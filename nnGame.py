@@ -78,12 +78,14 @@ def playGame(nn):
         player2.doMove(move,center)
         # os.system('clear')
         # move = computer.makeMove(center)
-        mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, True, nn)
-        move = mcts_nn_p1.run_simulation()
-        s, v = mcts_nn_p1.get_training_set()
-        training_state = np.append(training_state, s, axis=0)
-        training_value = np.append(training_value, v, axis=0)
-        player1.doMove(move, center)
+        if len(player1.hand) == 1 and len(player1.moves) == 1:
+            player1.doMove(player1.moves[0], center)
+        else:
+            mcts_nn_p1 = MCTSNN.MCTSNN(center, player1, player2, True, nn)
+            move = mcts_nn_p1.run_simulation()
+            s, v = mcts_nn_p1.get_training_set()
+            training_state = np.append(training_state, s, axis=0)
+            player1.doMove(move, center)
     print("HALF WAY SCORES")
     print("Human Score", player2.calculateScore())
     print("Computer Score", player1.calculateScore())
@@ -134,13 +136,15 @@ def playGame(nn):
 
 if __name__ == "__main__":
     nn = NeuralNetwork.NeuralNetwork()
-    times = []
     for i in range(2000):
         start_time = time.time()
         training_state, training_value = playGame(nn)
+        match = time.time() - start_time
+        start_time = time.time()
         nn.train_network(training_state, training_value)
+        train = time.time() - start_time
         # print("--- %s seconds ---" % (time.time() - start_time))
-        with open('time_taken.txt', 'w') as f:
-            string = 'Time for match {} ==> {}'.format(i, time.time() - start_time)
+        with open('time_taken.txt', 'a') as f:
+            string = '{} Time for play {}, time for training {}'.format(i, match, train)
             f.write(string)
     print("End of 2000 Matches")

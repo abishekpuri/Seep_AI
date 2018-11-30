@@ -1,1 +1,1 @@
-Time for match 25 ==> 285.4618456363678
+0 Time for play 251.7216775417328, time for training 28.603712558746338
