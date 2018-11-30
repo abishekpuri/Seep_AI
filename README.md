@@ -1,7 +1,62 @@
 # Seep_AI
 Building An AI Agent to play two-player version of Seep
 
-To play the game, run python Game.py
+To play the game, 
+```
+usage: Game.py [-h] [-d1 D1] [-d2 D2] [-l L L L L] [-r R] {mcts,emm,nn}
+
+positional arguments:
+  {mcts,emm,nn}  Type of agent
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -d1 D1         Depth in expectimax
+  -d2 D2         Depth in minimax
+  -l L L L L     Weights in evaluation function
+  -r R           Round in MCTS
+```
+For example, run ```python Game.py mcts -r 1500``` to play a game with MCTS using 1500 game simulation per move. :)
+
+# File structure
+```
+.
+├── Classes                                             Classes for the game, AI and model
+├── Game.py                                             Python script for human versus computer
+├── MCTSGame.py                                         Python script for MCTS versus MCTS
+├── MCTSTest.py                                           
+├── minimaxGame.py                                      Python script for expectiminimax versus MCTS
+├── minivsnnGame.py                                     Python script for expectiminimax versus nnMCTS
+├── nnGame.py                                           Python script for training the neutral network
+├── nnGame.pyc
+├── NNTest.py
+├── Plan.txt
+├── plot.py                                             Plot the results
+├── README.md
+├── results1                                            --|
+├── results10                                             |
+├── results11                                             |
+├── results12                                             |
+├── results2                                              |
+├── results25                                             |
+├── results26                                             |
+├── results27                                             |
+├── results28                                             |-- Results
+├── results3                                              |
+├── results4                                              |
+├── results5                                              |
+├── results6                                              |
+├── results7                                              |
+├── results8                                              |
+├── results9                                              |
+├── resultsNN                                           --|
+├── SampleGame                                          Graphs for some random gameplay in the results
+└── time_taken.txt
+```
+
+# For MCTS vs MCTS
+Run ```python MCTSGame.py```.
+
+NOTE: Please kindly choose the bid and do the first move for the MCTS model.
 
 # For expectiminimax vs MCTS
 ```
