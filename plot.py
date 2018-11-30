@@ -60,7 +60,8 @@ def plotRandom(dirName, title):
 
         # show 3 graphs, emm, mcts, and both scores
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(15,5))
-        fig.suptitle(randomFile+' in '+title)
+        # fig.suptitle(randomFile+' in '+title)
+        fig.suptitle(title)
 
         ax = mcts.plot(ax=axes[0], kind='line', xticks=np.arange(24), title="MCTS")
         ax.set_xlabel("Move")
