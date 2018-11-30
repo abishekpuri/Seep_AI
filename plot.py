@@ -131,7 +131,7 @@ def plotType(typeOfPlot, dirName):
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", help='Type of plots', required=True, type=int, choices=[1, 2, 3])
 parser.add_argument("-d", help='Results directory', type=str)
-parser.add_argument('-p', help='Plot', action='store_true')
+parser.add_argument('-p', help='Show plot', action='store_true')
 args = parser.parse_args()
 
 plotType(args.t, args.d)
