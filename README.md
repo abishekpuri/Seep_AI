@@ -17,11 +17,28 @@ optional arguments:
   -m M        Maximun gameplay
   -d D        Results directory
 ```
-  
-For example, run ```/usr/local/bin/python3 minimaxGame.py -d1 1 -d2 1 -l 1 1 1 100 -r 10 -c 0 -m 1 -d results/```.
-
 WARNING: Please prepare the directory structure before running the command. The root folder name is an argument above. The subfolder must be named ```gameResult```.
 ```
 results/
 └── gameResult
 ```
+### Exmaple
+For example, run ```/usr/local/bin/python3 minimaxGame.py -d1 1 -d2 1 -l 1 1 1 100 -r 10 -c 0 -m 1 -d results/```.
+
+# For plotting results
+```
+usage: plot.py [-h] -t {1,2,3} [-d D] [-p]
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -t {1,2,3}  Type of plots
+  -d D        Results directory
+  -p          Plot
+```
+NOTE: If results directory is not given, all results will be shown.
+### Types
+1. Type 1 shows final scores
+2. Type 2 shows a random game statistic
+3. Type 3 shows average win rate of MCTS
+### Example
+For example, run ```python plot.py -t 3 -p``` with graphs and ```python plot.py -t 3``` without graphs
