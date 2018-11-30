@@ -3,6 +3,7 @@ import os
 import copy
 import time
 import pandas as pd
+import argparse
 
 # # Encode the game state from the perspective of a player
 # def encodeHistory(player,center):
@@ -12,11 +13,11 @@ import pandas as pd
 #         cards[13*card.suit + card.value - 1] = 1
 #     # There is a 13-D vector representing the spades, 0 if that card has not been seen, 1 
 
-
-# First 10 game is 10, last 10 game is 20
-timeForMCTS = 20
+timeForMCTS = 1000000
 
 def playGame():
+    humanScoreHistory = []
+    computerScoreHistory = []
     gameHistory = []
     center = Center.Center()
     deck = Deck.Deck()
@@ -50,6 +51,7 @@ def playGame():
 
     print(center)
     move = human.makeMove(center,True,bidValue)
+    humanScoreHistory.append(human.calculateScore())
     computer.evaluateOpponentMove(move)
     #human.makeMove(center,True,bidValue)
     for i in range(8):
@@ -58,7 +60,9 @@ def playGame():
     #print("COMPUTERS HAND")
     print(center)
     print("Computer Hand",computer.hand)
-    move = computer.makeMove(center)
+    move = MCTS.MCTS(center,computer,human,True,timeForMCTS,roundForMCTS).run_simulation()
+    computer.doMove(move,center)
+    computerScoreHistory.append(computer.calculateScore())
     human.evaluateOpponentMove(move)
 
     while len(computer.hand) > 0:
@@ -68,13 +72,15 @@ def playGame():
         print(human.hand)
         # move = human.HumanChooseMove(center,False)
         move = human.makeMove(center)
+        humanScoreHistory.append(human.calculateScore())
         computer.evaluateOpponentMove(move)
         print(center)
         print(computer.hand)
         print("COMPUTERS MOVE IS:")
         # move = computer.makeMove(center)
-        move = MCTS.MCTS(center,computer,human,True,timeForMCTS,1500).run_simulation()
+        move = MCTS.MCTS(center,computer,human,True,timeForMCTS,roundForMCTS).run_simulation()
         computer.doMove(move,center)
+        computerScoreHistory.append(computer.calculateScore())
         human.evaluateOpponentMove(move)
 
     print("HALF WAY SCORES")
@@ -92,12 +98,14 @@ def playGame():
         print(human.hand)
         # move = human.HumanChooseMove(center,False)
         move = human.makeMove(center)
+        humanScoreHistory.append(human.calculateScore())
         computer.evaluateOpponentMove(move)
         print(center)
         print(computer.hand)
         print("COMPUTERS MOVE IS:")
-        move = MCTS.MCTS(center,computer,human,False,timeForMCTS,1500).run_simulation()
+        move = MCTS.MCTS(center,computer,human,False,timeForMCTS,roundForMCTS).run_simulation()
         computer.doMove(move,center)
+        computerScoreHistory.append(computer.calculateScore())
         human.evaluateOpponentMove(move)
 
     
@@ -111,34 +119,49 @@ def playGame():
     print("FINAL SCORE")
     print("Human Score",human.calculateScore())
     print("Computer Score",computer.calculateScore())
-    return (gameHistory, human.calculateScore(), computer.calculateScore())
+    return (gameHistory, human.calculateScore(), computer.calculateScore(), humanScoreHistory, computerScoreHistory)
 
 # playGame()
-resultDir = 'results/'
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-d1", help='Depth in expectimax', required=True, type=int)
+parser.add_argument("-d2", help='Depth in minimax', required=True, type=int)
+parser.add_argument('-l', nargs=4, help='Weights in evaluation function', required=True, type=int)
+parser.add_argument("-r", help='Round in MCTS', required=True, type=int)
+parser.add_argument("-c", help='Current gameplay', required=True, type=int)
+parser.add_argument("-m", help='Maximun gameplay', required=True, type=int)
+parser.add_argument("-d", help='Results directory', required=True, type=str)
+args = parser.parse_args()
+# print(args.d1)
+Ai.depth1 = args.d1
+Ai.depth2 = args.d2
+Ai.weights = args.l
+roundForMCTS = args.r
+currentGame = args.c
+maxGameplay = args.m
+resultDir = args.d
 gameStatDir = 'gameResult/'
 scoresFile = 'scores.csv'
+gameFile = 'gameplay'
 
 if __name__ == "__main__":
     try:
         scoresDf = pd.read_csv(resultDir+scoresFile, index_col=0)
-    except pd.io.common.EmptyDataError:
+    except pd.io.common.EmptyDataError and FileNotFoundError:
         print("WARMING:",resultDir+scoresFile, "is empty")
         scoresDf = pd.DataFrame(columns=['MCTS', 'Expectiminimax'])
-    currentGame = 10
-    maxGameplay = 20
     while currentGame < maxGameplay:
         print('Game', currentGame)
         Ai.scoresHistory = []
         MCTS.winRateHistory = []
         start_time = time.time()
-        history, hmScore, aiScore = playGame()
+        history, hmScore, aiScore, hmScoreHis, aiScoreHis = playGame()
         newScore = pd.Series({'MCTS':hmScore, 'Expectiminimax':aiScore},name=currentGame)
         scoresDf = scoresDf.append(newScore)
         scoresDf.to_csv(resultDir+scoresFile)
         print("--- %s seconds ---" % (time.time() - start_time))
         # print(len(Ai.scoresHistory))
         # print(len(MCTS.winRateHistory))
-        MCTS.winRateHistory.append(MCTS.winRateHistory[-1]) # 1 record less
-        gameStat = pd.DataFrame({'Expectiminimax scores':Ai.scoresHistory, 'MCTS win rates':MCTS.winRateHistory})
-        gameStat.to_csv(resultDir+gameStatDir+'gameplay'+str(currentGame)+'.csv')
+        gameStat = pd.DataFrame({'Expectiminimax scores':Ai.scoresHistory, 'Expectiminimax game scores':hmScoreHis, 'MCTS win rates':MCTS.winRateHistory, 'MCTS game scores':aiScoreHis})
+        gameStat.to_csv(resultDir+gameStatDir+gameFile+str(currentGame)+'.csv')
         currentGame+=1

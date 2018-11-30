@@ -6,10 +6,12 @@ from . import Player
 from . import Card
 
 scoresHistory = []
+weights = []
+depth1 = 1
+depth2 = 1
 
 # Most important function
 def evaluateState(state, agent, myTurn):
-    weights = [1, 1, 1, 100]
     center, opponentScore = state
     score = (agent.calculateScore() - opponentScore)*weights[0]
     score -= sum([p.score for p in center.piles])*weights[1] # don't leave scores in the center because opponent may take it
@@ -200,7 +202,7 @@ class Ai(Player.Player):
     def makeMove(self,center,bidMove=False,bid=0):
         agent = copy.deepcopy(self)
         temp_center = copy.deepcopy(center)
-        depth = 1
+        depth = depth1
         #print("Current Agent Score Is",agent.calculateScore())
         opponentScore = self.opponent.calculateScore()
 
@@ -209,7 +211,7 @@ class Ai(Player.Player):
         opponentCards = convertArrayToCards(self.cardHistory)
         if len(opponentCards) <= 13:
             deterministic = True
-            depth = 2
+            depth = depth2
         
         alpha=float('-inf')
         beta=float('inf')
