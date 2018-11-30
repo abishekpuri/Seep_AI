@@ -22,35 +22,12 @@ For example, run ```python Game.py mcts -r 1500``` to play a game with MCTS usin
 .
 ├── Classes                                             Classes for the game, AI and model
 ├── Game.py                                             Python script for human versus computer
-├── MCTSGame.py                                         Python script for MCTS versus MCTS
-├── MCTSTest.py                                           
+├── MCTSGame.py                                         Python script for MCTS versus MCTS                                           
 ├── minimaxGame.py                                      Python script for expectiminimax versus MCTS
 ├── minivsnnGame.py                                     Python script for expectiminimax versus nnMCTS
 ├── nnGame.py                                           Python script for training the neutral network
-├── nnGame.pyc
-├── NNTest.py
-├── Plan.txt
 ├── plot.py                                             Plot the results
-├── README.md
-├── results1                                            --|
-├── results10                                             |
-├── results11                                             |
-├── results12                                             |
-├── results2                                              |
-├── results25                                             |
-├── results26                                             |
-├── results27                                             |
-├── results28                                             |-- Results
-├── results3                                              |
-├── results4                                              |
-├── results5                                              |
-├── results6                                              |
-├── results7                                              |
-├── results8                                              |
-├── results9                                              |
-├── resultsNN                                           --|
-├── SampleGame                                          Graphs for some random gameplay in the results
-└── time_taken.txt
+└── README.md
 ```
 
 # For MCTS vs MCTS
